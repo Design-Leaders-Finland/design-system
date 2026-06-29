@@ -1,7 +1,9 @@
-name: design_system
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+name: design_leaders_system
+description: The Design System of Design Leaders Finland in-house provided apps
+version: 0.1.0
+license: Apache-2
+homepage: https://design-leaders-design-system.netlify.app/
+repository: https://github.com/Design-Leaders-Finland/design-system
 
 environment:
   sdk: ^3.12.1

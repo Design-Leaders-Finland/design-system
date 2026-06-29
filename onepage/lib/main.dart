@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:design_system/design_system.dart';
+import 'package:design_leaders_system/design_leaders_system.dart';
 
 void main() {
   runApp(const OnePageWebApp());
@@ -105,21 +105,14 @@ class _HeaderSection extends StatelessWidget {
         horizontal: Spacing.s6,
         vertical: isNarrow ? Spacing.s10 : Spacing.s16,
       ),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        boxShadow: AppShadow.sm,
-      ),
+      decoration: BoxDecoration(color: colors.surface, boxShadow: AppShadow.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: const AppText.heading(
-                  'Design System for Web',
-                ),
-              ),
+              Expanded(child: const AppText.heading('Design System for Web')),
               _ThemeSwitcher(
                 isDark: themeMode == ThemeMode.dark,
                 onChanged: onThemeChanged,
@@ -148,10 +141,7 @@ class _HeaderSection extends StatelessWidget {
 }
 
 class _ColorPaletteSection extends StatelessWidget {
-  const _ColorPaletteSection({
-    required this.colors,
-    super.key,
-  });
+  const _ColorPaletteSection({required this.colors, super.key});
 
   final AppColorScheme colors;
 
@@ -209,11 +199,7 @@ class _ColorPaletteSection extends StatelessWidget {
 }
 
 class _ColorSwatch extends StatelessWidget {
-  const _ColorSwatch({
-    required this.label,
-    required this.color,
-    super.key,
-  });
+  const _ColorSwatch({required this.label, required this.color, super.key});
 
   final String label;
   final Color color;
@@ -221,14 +207,14 @@ class _ColorSwatch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = ThemeData.estimateBrightnessForColor(color);
-    final textColor = brightness == Brightness.light ? AppColors.black : AppColors.white;
+    final textColor = brightness == Brightness.light
+        ? AppColors.black
+        : AppColors.white;
     return Container(
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(AppBorderRadius.md),
-        border: Border.all(
-          color: Colors.black.withAlpha(20),
-        ),
+        border: Border.all(color: Colors.black.withAlpha(20)),
       ),
       padding: const EdgeInsets.all(Spacing.s4),
       child: Column(
@@ -237,12 +223,16 @@ class _ColorSwatch extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: textColor),
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(color: textColor),
           ),
           const SizedBox(height: Spacing.s1),
           Text(
             '#${color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor.withAlpha(204)),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: textColor.withAlpha(204)),
           ),
         ],
       ),
@@ -295,17 +285,20 @@ class _FeatureSection extends StatelessWidget {
     final cards = [
       _FeatureCard(
         title: 'Shared Theme',
-        description: 'Use AppTheme and ThemeExtension values across onepage and the package.',
+        description:
+            'Use AppTheme and ThemeExtension values across onepage and the package.',
         color: colors.primary,
       ),
       _FeatureCard(
         title: 'Typography',
-        description: 'Centralized text styles with AppTypography and AppText helpers.',
+        description:
+            'Centralized text styles with AppTypography and AppText helpers.',
         color: colors.secondary,
       ),
       _FeatureCard(
         title: 'Spacing Scale',
-        description: 'Consistent spacing using spacing tokens such as Spacing.s8 and AppBorderRadius.',
+        description:
+            'Consistent spacing using spacing tokens such as Spacing.s8 and AppBorderRadius.',
         color: colors.accent,
       ),
     ];
@@ -318,12 +311,16 @@ class _FeatureSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: cards
-                  .map((card) => Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Spacing.s3),
-                          child: card,
+                  .map(
+                    (card) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Spacing.s3,
                         ),
-                      ))
+                        child: card,
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
     );
@@ -331,10 +328,7 @@ class _FeatureSection extends StatelessWidget {
 }
 
 class _CallToActionSection extends StatelessWidget {
-  const _CallToActionSection({
-    required this.colors,
-    super.key,
-  });
+  const _CallToActionSection({required this.colors, super.key});
 
   final AppColorScheme colors;
 
@@ -350,9 +344,7 @@ class _CallToActionSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AppText.heading(
-            'Ready to launch your next web app?',
-          ),
+          const AppText.heading('Ready to launch your next web app?'),
           const SizedBox(height: Spacing.s4),
           const AppText.body(
             'Onepage is styled with shared design tokens and reusable widgets from the design system package.',
@@ -397,16 +389,12 @@ class _FeatureCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(color: color),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(color: color),
           ),
           const SizedBox(height: Spacing.s3),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(description, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );
