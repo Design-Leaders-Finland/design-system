@@ -33,9 +33,11 @@ Add this package to your `pubspec.yaml`:
 dependencies:
   design_leaders_system:
     git:
-      url: ssh://git@github.com/Design-Leaders-Finland/design-system.git
+      url: https://github.com/Design-Leaders-Finland/design-system.git
       ref: main # or specify a tag/commit for stability
 ```
+
+Using the `https` instead of `ssh` is possible as long as the repository is public.
 
 ### Example
 
@@ -112,4 +114,4 @@ flutter test
 
 ## License
 
-Apache 2
+[Apache 2.0](LICENSE) © Design Leaders Finland
