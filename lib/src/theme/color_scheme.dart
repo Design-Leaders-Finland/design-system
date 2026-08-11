@@ -5,14 +5,15 @@ import "../tokens/colors/colors.dart";
 
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: AppColors.primary,
+  primary: AppColors.darkPrimary,
   secondary: AppColors.secondary,
   error: AppColors.danger,
   onError: AppColors.danger,
-  onPrimary: AppColors.text,
-  onSecondary: AppColors.text,
-  surface: AppColors.background,
-  onSurface: AppColors.text,
+  onPrimary: AppColors.white,
+  onSecondary: AppColors.white,
+  surface: AppColors.darkSurface,
+  onSurface: AppColors.darkText,
+  outline: AppColors.darkBorder,
 );
 
 const ColorScheme lightColorScheme = ColorScheme(
@@ -21,10 +22,11 @@ const ColorScheme lightColorScheme = ColorScheme(
   secondary: AppColors.secondary,
   error: AppColors.danger,
   onError: AppColors.danger,
-  onPrimary: AppColors.text,
-  onSecondary: AppColors.text,
+  onPrimary: AppColors.white,
+  onSecondary: AppColors.white,
   surface: AppColors.background,
-  onSurface: AppColors.text,
+  onSurface: AppColors.textDefault,
+  outline: AppColors.border,
 );
 
 @immutable
@@ -33,11 +35,11 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
   final Color secondary;
   final Color background;
   final Color text;
+  final Color textAlternate;
+  final Color textTertiary;
   final Color danger;
   final Color surface;
   final Color primaryOnDarkBackground;
-  final Color textOnDarkBackground;
-  final Color textOnBackground;
   final Color primaryOnBackground;
   final Color border;
   final Color accent;
@@ -47,11 +49,11 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     required this.secondary,
     required this.background,
     required this.text,
+    required this.textAlternate,
+    required this.textTertiary,
     required this.danger,
     required this.surface,
     required this.primaryOnDarkBackground,
-    required this.textOnDarkBackground,
-    required this.textOnBackground,
     required this.primaryOnBackground,
     required this.border,
     required this.accent,
@@ -61,29 +63,29 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     primary: AppColors.primary,
     secondary: AppColors.secondary,
     background: AppColors.background,
-    text: AppColors.text,
+    text: AppColors.textDefault,
+    textAlternate: AppColors.textAlternate,
+    textTertiary: AppColors.complementary,
     danger: AppColors.danger,
     surface: AppColors.background,
-    primaryOnDarkBackground: AppColors.primaryOnDarkBackground,
-    textOnDarkBackground: AppColors.textOnDarkBackground,
-    textOnBackground: AppColors.textOnBackground,
+    primaryOnDarkBackground: AppColors.darkPrimary,
     primaryOnBackground: AppColors.primaryOnBackground,
     border: AppColors.border,
     accent: AppColors.accent,
   );
 
   factory AppColorScheme.dark() => const AppColorScheme(
-    primary: AppColors.primary,
+    primary: AppColors.darkPrimary,
     secondary: AppColors.secondary,
-    background: AppColors.background,
-    text: AppColors.text,
+    background: AppColors.darkBackground,
+    text: AppColors.darkText,
+    textAlternate: AppColors.darkTextAlternate,
+    textTertiary: AppColors.complementary,
     danger: AppColors.danger,
-    surface: AppColors.background,
-    primaryOnDarkBackground: AppColors.primaryOnDarkBackground,
-    textOnDarkBackground: AppColors.textOnDarkBackground,
-    textOnBackground: AppColors.textOnBackground,
+    surface: AppColors.darkSurface,
+    primaryOnDarkBackground: AppColors.darkPrimary,
     primaryOnBackground: AppColors.primaryOnBackground,
-    border: AppColors.border,
+    border: AppColors.darkBorder,
     accent: AppColors.accent,
   );
 
@@ -107,12 +109,11 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       secondary: secondary ?? this.secondary,
       background: background ?? this.background,
       text: text ?? this.text,
+      textAlternate: textAlternate ?? this.textAlternate,
+      textTertiary: textTertiary ?? this.textTertiary,
       danger: danger ?? this.danger,
       surface: surface ?? this.surface,
-      primaryOnDarkBackground:
-          primaryOnDarkBackground ?? this.primaryOnDarkBackground,
-      textOnDarkBackground: textOnDarkBackground ?? this.textOnDarkBackground,
-      textOnBackground: textOnBackground ?? this.textOnBackground,
+      primaryOnDarkBackground: primaryOnDarkBackground ?? this.primaryOnDarkBackground,
       primaryOnBackground: primaryOnBackground ?? this.primaryOnBackground,
       border: border ?? this.border,
       accent: accent ?? this.accent,
@@ -130,21 +131,13 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       secondary: Color.lerp(secondary, other.secondary, t)!,
       background: Color.lerp(background, other.background, t)!,
       text: Color.lerp(text, other.text, t)!,
+      textAlternate: Color.lerp(textAlternate, other.textAlternate, t)!,
+      textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       primaryOnDarkBackground: Color.lerp(
         primaryOnDarkBackground,
         other.primaryOnDarkBackground,
-        t,
-      )!,
-      textOnDarkBackground: Color.lerp(
-        textOnDarkBackground,
-        other.textOnDarkBackground,
-        t,
-      )!,
-      textOnBackground: Color.lerp(
-        textOnBackground,
-        other.textOnBackground,
         t,
       )!,
       primaryOnBackground: Color.lerp(

@@ -3,50 +3,74 @@ import '../../tokens/typography/typography.dart';
 import '../../tokens/colors/colors.dart';
 
 class AppText extends StatelessWidget {
-  const AppText.display(
+  AppText.display(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.displayMd,
-    this.color = AppColors.primary,
+    Color? color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  });
+  }) : color = color;
 
-  const AppText.heading(
+  AppText.heading(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.headlineMd,
+    Color? color,
+    this.textAlign = TextAlign.start,
+    this.overflow = TextOverflow.ellipsis,
+  }) : color = color;
+
+  AppText.title(
+    this.text, {
+    super.key,
+    this.maxLines,
+    this.fontSize,
+    this.fontWeight,
+    this.style = AppTypography.titleMd,
     this.color = AppColors.primary,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
   });
 
-  const AppText.label(
+  AppText.label(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.labelMd,
-    this.color = AppColors.primary,
+    Color? color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  });
+  }) : color = color;
 
-  const AppText.body(
+  AppText.body(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.bodyMd,
-    this.color = AppColors.primary,
+    Color? color,
+    this.textAlign = TextAlign.start,
+    this.overflow = TextOverflow.ellipsis,
+  }) : color = color;
+
+  AppText.rich(
+    this.text, {
+    super.key,
+    this.maxLines,
+    this.fontSize,
+    this.fontWeight,
+    this.style = AppTypography.bodyMd,
+    this.color = AppColors.hyperlink,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
   });
@@ -62,10 +86,12 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = color ?? Theme.of(context).colorScheme.onSurface;
+
     return Text(
       text,
       style: style.copyWith(
-        color: color,
+        color: themeColor,
         fontSize: fontSize,
         fontWeight: fontWeight,
       ),
