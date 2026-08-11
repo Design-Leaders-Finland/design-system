@@ -23,7 +23,30 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/fonts/Figtree-Light.ttf
+    - assets/fonts/Figtree-Regular.ttf
+    - assets/fonts/Figtree-SemiBold.ttf
+    - assets/fonts/AsapCondensed-Light.ttf
+    - assets/fonts/AsapCondensed-Regular.ttf
+    - assets/fonts/AsapCondensed-SemiBold.ttf
+  fonts:
+    - family: Figtree
+      fonts:
+        - asset: assets/fonts/Figtree-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Figtree-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Figtree-SemiBold.ttf
+          weight: 600
+    - family: Asap Condensed
+      fonts:
+        - asset: assets/fonts/AsapCondensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/AsapCondensed-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/AsapCondensed-SemiBold.ttf
+          weight: 600
   # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -2,7 +2,8 @@ import 'package:flutter/painting.dart';
 import '../spacing/spacing.dart' show baseUnit;
 
 final class FontFamily {
-  static const String inter = "Inter";
+  static const String figTree = 'packages/design_leaders_system/Figtree';
+  static const String asapCondensed = 'packages/design_leaders_system/Asap Condensed';
 }
 
 final class FontSize {
@@ -67,25 +68,25 @@ final class AppTypography {
   // ── Display ──────────────────────────────────
 
   static const TextStyle displayLg = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.xl5,
-    fontWeight: AppFontWeight.regular,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.tight,
     letterSpacing: AppLetterSpacing.tight,
   );
 
   static const TextStyle displayMd = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.xl4,
-    fontWeight: AppFontWeight.regular,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.tight,
     letterSpacing: AppLetterSpacing.tight,
   );
 
   static const TextStyle displaySm = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.lg,
-    fontWeight: AppFontWeight.regular,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
@@ -93,25 +94,25 @@ final class AppTypography {
   // ── Headline ─────────────────────────────────
 
   static const TextStyle headlineLg = TextStyle(
-    fontFamily: FontFamily.inter,
-    fontSize: FontSize.xl,
-    fontWeight: AppFontWeight.regular,
+    fontFamily: FontFamily.figTree,
+    fontSize: FontSize.xxl,
+    fontWeight: AppFontWeight.light,
     height: AppLineHeight.snug,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle headlineMd = TextStyle(
-    fontFamily: FontFamily.inter,
-    fontSize: FontSize.xl4,
-    fontWeight: AppFontWeight.regular,
+    fontFamily: FontFamily.figTree,
+    fontSize: FontSize.xl,
+    fontWeight: AppFontWeight.light,
     height: AppLineHeight.snug,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle headlineSm = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.lg,
-    fontWeight: AppFontWeight.regular,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.snug,
     letterSpacing: AppLetterSpacing.normal,
   );
@@ -119,33 +120,41 @@ final class AppTypography {
   // ── Title ─────────────────────────────────────
 
   static const TextStyle titleLg = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.xl,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.snug,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle titleMd = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.base,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle titleSm = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.figTree,
     fontSize: FontSize.sm,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.semiBold,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   // ── Body ──────────────────────────────────────
 
+  static const TextStyle bodyStrong = TextStyle(
+    fontFamily: FontFamily.asapCondensed,
+    fontSize: FontSize.base,
+    fontWeight: AppFontWeight.semiBold,
+    height: AppLineHeight.normal,
+    letterSpacing: AppLetterSpacing.normal,
+  );
+
   static const TextStyle bodyLg = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.base,
     fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
@@ -153,7 +162,7 @@ final class AppTypography {
   );
 
   static const TextStyle bodyMd = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.sm,
     fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
@@ -161,7 +170,7 @@ final class AppTypography {
   );
 
   static const TextStyle bodySm = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.xs,
     fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
@@ -171,25 +180,25 @@ final class AppTypography {
   // ── Label ─────────────────────────────────────
 
   static const TextStyle labelLg = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.sm,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle labelMd = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.xs,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
 
   static const TextStyle labelSm = TextStyle(
-    fontFamily: FontFamily.inter,
+    fontFamily: FontFamily.asapCondensed,
     fontSize: FontSize.xs,
-    fontWeight: AppFontWeight.medium,
+    fontWeight: AppFontWeight.regular,
     height: AppLineHeight.normal,
     letterSpacing: AppLetterSpacing.normal,
   );
