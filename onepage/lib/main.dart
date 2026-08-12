@@ -1,5 +1,12 @@
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:design_leaders_system/design_leaders_system.dart';
+import 'package:go_router/go_router.dart';
+import 'widgets/app_header.dart';
+import 'pages/widgets_page.dart';
+
+const _kThemeModeKey = 'theme_mode';
 
 void main() {
   runApp(const OnePageWebApp());
@@ -15,36 +22,59 @@ class OnePageWebApp extends StatefulWidget {
 class _OnePageWebAppState extends State<OnePageWebApp> {
   ThemeMode themeMode = ThemeMode.light;
 
-  void _handleThemeChanged(bool isDark) {
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeMode();
+  }
+
+  Future<void> _loadThemeMode() async {
+    final saved = html.window.localStorage[_kThemeModeKey];
+    if (!mounted) return;
+    setState(() {
+      themeMode = saved == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
+  Future<void> _handleThemeChanged(bool isDark) async {
+    html.window.localStorage[_kThemeModeKey] = isDark ? 'dark' : 'light';
+    if (!mounted) return;
     setState(() {
       themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
+  late final GoRouter _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) =>
+            OnePageHome(onThemeChanged: _handleThemeChanged),
+      ),
+      GoRoute(
+        path: '/widgets',
+        builder: (context, state) =>
+            WidgetsPage(onThemeChanged: _handleThemeChanged),
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Design System Overview',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: OnePageHome(
-        themeMode: themeMode,
-        onThemeChanged: _handleThemeChanged,
-      ),
+      routerConfig: _router,
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class OnePageHome extends StatelessWidget {
-  const OnePageHome({
-    super.key,
-    required this.themeMode,
-    required this.onThemeChanged,
-  });
+  const OnePageHome({super.key, required this.onThemeChanged});
 
-  final ThemeMode themeMode;
   final ValueChanged<bool> onThemeChanged;
 
   @override
@@ -60,7 +90,9 @@ class OnePageHome extends StatelessWidget {
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: SizedBox(height: 140 + (isNarrow ? Spacing.s10 : Spacing.s16) * 2),
+                child: SizedBox(
+                  height: 140 + (isNarrow ? Spacing.s10 : Spacing.s16) * 2,
+                ),
               ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -91,10 +123,8 @@ class OnePageHome extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1200),
-                child: _HeaderSection(
+                child: AppHeader(
                   isNarrow: isNarrow,
-                  colors: colors,
-                  themeMode: themeMode,
                   onThemeChanged: onThemeChanged,
                 ),
               ),
@@ -106,64 +136,8 @@ class OnePageHome extends StatelessWidget {
   }
 }
 
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection({
-    required this.isNarrow,
-    required this.colors,
-    required this.themeMode,
-    required this.onThemeChanged,
-    super.key,
-  });
-
-  final bool isNarrow;
-  final AppColorScheme colors;
-  final ThemeMode themeMode;
-  final ValueChanged<bool> onThemeChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: Spacing.s6,
-        vertical: isNarrow ? Spacing.s8 : Spacing.s10,
-      ),
-      decoration: BoxDecoration(color: colors.surface, boxShadow: AppShadow.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(child: AppText.display('Design System Overview', style: AppTypography.displayLg, color: colors.textTertiary)),
-              _ThemeSwitcher(
-                isDark: themeMode == ThemeMode.dark,
-                onChanged: onThemeChanged,
-              ),
-            ],
-          ),
-          const SizedBox(height: Spacing.s4),
-          AppText.body(
-            'A lightweight Flutter web landing page built with shared design tokens, responsive spacing, and reusable components.',
-            maxLines: 3,
-          ),
-        /*const SizedBox(height: Spacing.s8),
-          Wrap(
-            spacing: Spacing.s3,
-            runSpacing: Spacing.s3,
-            children: const [
-              Chip(label: Text('Flutter Web')),
-              Chip(label: Text('Design Tokens')),
-              Chip(label: Text('Responsive Layout')),
-            ],
-          ),*/
-        ],
-      ),
-    );
-  }
-}
-
 class _ColorPaletteSection extends StatelessWidget {
-  const _ColorPaletteSection({required this.colors, super.key});
+  const _ColorPaletteSection({required this.colors});
 
   final AppColorScheme colors;
 
@@ -199,13 +173,11 @@ class _ColorPaletteSection extends StatelessWidget {
         children: [
           AppText.display('Key Color Tones', color: colors.textTertiary),
           const SizedBox(height: Spacing.s6),
-          AppText.body(
-              'Cardinal tones ...',
-          ),
+          AppText.body('Cardinal tones ...'),
           const SizedBox(height: Spacing.s4),
           LayoutBuilder(
             builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 4 : 2;
+              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
               return GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -223,13 +195,11 @@ class _ColorPaletteSection extends StatelessWidget {
             },
           ),
           const SizedBox(height: Spacing.s6),
-          AppText.body(
-              'Semantic tones ...',
-          ),
+          AppText.body('Semantic tones ...'),
           const SizedBox(height: Spacing.s6),
           LayoutBuilder(
             builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 4 : 2;
+              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
               return GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -247,13 +217,11 @@ class _ColorPaletteSection extends StatelessWidget {
             },
           ),
           const SizedBox(height: Spacing.s6),
-          AppText.body(
-              'Inscriptive tones ...',
-          ),
+          AppText.body('Inscriptive tones ...'),
           const SizedBox(height: Spacing.s6),
           LayoutBuilder(
             builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 4 : 2;
+              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
               return GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -271,13 +239,11 @@ class _ColorPaletteSection extends StatelessWidget {
             },
           ),
           const SizedBox(height: Spacing.s6),
-          AppText.body(
-              'Layout tones ...',
-          ),
+          AppText.body('Layout tones ...'),
           const SizedBox(height: Spacing.s6),
           LayoutBuilder(
             builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 4 : 2;
+              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
               return GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -301,7 +267,7 @@ class _ColorPaletteSection extends StatelessWidget {
 }
 
 class _ColorSwatch extends StatelessWidget {
-  const _ColorSwatch({required this.label, required this.color, super.key});
+  const _ColorSwatch({required this.label, required this.color});
 
   final String label;
   final Color color;
@@ -342,38 +308,8 @@ class _ColorSwatch extends StatelessWidget {
   }
 }
 
-class _ThemeSwitcher extends StatelessWidget {
-  const _ThemeSwitcher({
-    required this.isDark,
-    required this.onChanged,
-    super.key,
-  });
-
-  final bool isDark;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.light_mode, size: 18),
-        Switch(
-          value: isDark,
-          onChanged: onChanged,
-          activeThumbColor: AppColors.white,
-          activeTrackColor: AppColors.white.withAlpha(80),
-          inactiveThumbColor: AppColors.secondary,
-          inactiveTrackColor: AppColors.secondary.withAlpha(80),
-        ),
-        const Icon(Icons.dark_mode, size: 18),
-      ],
-    );
-  }
-}
-
 class _TypographySection extends StatelessWidget {
-  const _TypographySection({required this.colors, super.key});
+  const _TypographySection({required this.colors});
 
   final AppColorScheme colors;
 
@@ -390,209 +326,47 @@ class _TypographySection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText.display('Typography', color: colors.textTertiary),
+          AppText.display(
+            'Typography (Context aware)',
+            color: colors.textTertiary,
+          ),
           const SizedBox(height: Spacing.s6),
           AppText.body(
-              'The design system provides a set of shared text styles and typography tokens for consistent text styling across the app.',
+            'The design system provides a set of shared text styles and typography tokens for consistent text styling across the app.',
           ),
+          AppText.body('Operating system aware font selection.'),
           const SizedBox(height: Spacing.s4),
           AppText.heading(
-            '<h1> Figtree Light 300 / 32px - Default', style: AppTypography.headlineLg,
+            '<h1> Figtree Light 300 / 32px - Default',
+            style: AppTypography.headlineLg,
             maxLines: 1,
           ),
           const SizedBox(height: Spacing.s4),
           AppText.heading(
-            '<h2> Figtree Light 300 / 28px - Alternate', style: AppTypography.headlineMd, color:context.colors.textAlternate,
+            '<h2> Figtree Light 300 / 28px - Alternate',
+            style: AppTypography.headlineMd,
+            color: context.colors.textAlternate,
             maxLines: 1,
           ),
           const SizedBox(height: Spacing.s4),
           AppText.heading(
-            '<h3> Figtree SemiBold 600 / 24px - Tertiary', style: AppTypography.headlineSm, color:context.colors.textTertiary,
+            '<h3> Figtree SemiBold 600 / 24px - Tertiary',
+            style: AppTypography.headlineSm,
+            color: context.colors.textTertiary,
             maxLines: 1,
           ),
           const SizedBox(height: Spacing.s4),
           AppText.body(
-            '<p> Asap Condensed Regular 400 / 16px - Default', style: AppTypography.bodyLg,
+            '<p> Asap Condensed Regular 400 / 16px - Default',
+            style: AppTypography.bodyLg,
             maxLines: 1,
           ),
           const SizedBox(height: Spacing.s4),
           AppText.rich(
-            '<a> Asap Condensed SemiBold 600 / 16px - Hyperlink', style: AppTypography.bodyStrong,
+            '<a> Asap Condensed SemiBold 600 / 16px - Hyperlink',
+            style: AppTypography.bodyStrong,
             maxLines: 1,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TypographyPreviewCard extends StatelessWidget {
-  const _TypographyPreviewCard({
-    required this.label,
-    required this.sample,
-    required this.colors,
-    super.key,
-  });
-
-  final String label;
-  final Widget sample;
-  final AppColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Spacing.s4),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: BorderRadius.circular(AppBorderRadius.md),
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: colors.text,
-            ),
-          ),
-          const SizedBox(height: Spacing.s2),
-          sample,
-        ],
-      ),
-    );
-  }
-}
-
-/*
-
-class _FeatureSection extends StatelessWidget {
-  const _FeatureSection({
-    required this.isNarrow,
-    required this.colors,
-    super.key,
-  });
-
-  final bool isNarrow;
-  final AppColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final cards = [
-      _FeatureCard(
-        title: 'Shared Theme',
-        description:
-            'Use AppTheme and ThemeExtension values across onepage and the package.',
-        color: colors.primary,
-      ),
-      _FeatureCard(
-        title: 'Typography',
-        description:
-            'Centralized text styles with AppTypography and AppText helpers.',
-        color: colors.secondary,
-      ),
-      _FeatureCard(
-        title: 'Spacing Scale',
-        description:
-            'Consistent spacing using spacing tokens such as Spacing.s8 and AppBorderRadius.',
-        color: colors.accent,
-      ),
-    ];
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Spacing.s6),
-      child: isNarrow
-          ? Column(children: cards)
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: cards
-                  .map(
-                    (card) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Spacing.s3,
-                        ),
-                        child: card,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-    );
-  }
-}
-
-class _CallToActionSection extends StatelessWidget {
-  const _CallToActionSection({required this.colors, super.key});
-
-  final AppColorScheme colors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: Spacing.s6),
-      padding: const EdgeInsets.all(Spacing.s8),
-      decoration: BoxDecoration(
-        color: colors.primary.withAlpha(20),
-        borderRadius: BorderRadius.circular(AppBorderRadius.xl),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText.heading('Ready to launch your next web app?'),
-          const SizedBox(height: Spacing.s4),
-          AppText.body(
-            'Onepage is styled with shared design tokens and reusable widgets from the design system package.',
-            maxLines: 2,
-          ),
-          const SizedBox(height: Spacing.s6),
-          SolidButton(
-            onPressed: () {},
-            child: AppText.label('Get started'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-*/
-
-class _FeatureCard extends StatelessWidget {
-  const _FeatureCard({
-    required this.title,
-    required this.description,
-    required this.color,
-    super.key,
-  });
-
-  final String title;
-  final String description;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: Spacing.s6),
-      padding: const EdgeInsets.all(Spacing.s6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppBorderRadius.lg),
-        boxShadow: AppShadow.sm,
-        border: Border.all(color: color.withAlpha(41)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(color: color),
-          ),
-          const SizedBox(height: Spacing.s3),
-          Text(description, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );
