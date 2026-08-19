@@ -2,6 +2,8 @@
 
 The Design System of Design Leaders Finland in-house provided apps.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d36dc6ec-951d-4e67-92c4-850d74c94650/deploy-status)](https://app.netlify.com/projects/design-leaders-design-system/deploys)
+
 ## Features
 
 ### Design Tokens
@@ -98,6 +100,8 @@ The `onepage/` folder contains a demo application showcasing the design system c
 - Button variants
 
 The demo app is not included in the package itself but serves as a reference implementation.
+
+Its automatically deployed to Netlify on every push to `main` branch and can be viewed at [https://design-leaders-design-system.netlify.app/](https://design-leaders-design-system.netlify.app/).
 
 ## Development
 
