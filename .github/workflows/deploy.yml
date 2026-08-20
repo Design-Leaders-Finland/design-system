@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+concurrency: # new commits on the same branch/PR cancel the older, now-obsolete run
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   FLUTTER_VERSION: "3.44.2" # single source of truth, reused by all jobs
 
