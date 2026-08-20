@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+concurrency: # new commits on the same branch/PR cancel the older, now-obsolete run
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   FLUTTER_VERSION: "3.44.2" # single source of truth, reused by all jobs
 
@@ -41,7 +45,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@2304451b4038577aa079e27936cc520845d25345 # v4
         with:
-          publish-dir: './build/web'
+          publish-dir: 'onepage/build/web' # Does not follow default working-directory
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
