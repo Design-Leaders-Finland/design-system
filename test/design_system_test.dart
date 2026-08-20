@@ -15,8 +15,11 @@ void main() {
   test('dark theme uses the dark-specific primary tone', () {
     final darkColors = AppTheme.darkTheme.extension<AppColorScheme>()!;
 
-    expect(darkColors.primary, equals(AppColors.primaryOnDarkBackground));
-    expect(AppTheme.darkTheme.colorScheme.primary, equals(AppColors.primaryOnDarkBackground));
+    expect(darkColors.primary, equals(AppColors.darkPrimary));
+    expect(
+      AppTheme.darkTheme.colorScheme.primary,
+      equals(AppColors.darkPrimary),
+    );
   });
 
   testWidgets('AppText follows the active theme text color in dark mode', (

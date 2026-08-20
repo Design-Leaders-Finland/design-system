@@ -3,31 +3,31 @@ import '../../tokens/typography/typography.dart';
 import '../../tokens/colors/colors.dart';
 
 class AppText extends StatelessWidget {
-  AppText.display(
+  const AppText.display(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.displayMd,
-    Color? color,
+    this.color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  }) : color = color;
+  });
 
-  AppText.heading(
+  const AppText.heading(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.headlineMd,
-    Color? color,
+    this.color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  }) : color = color;
+  });
 
-  AppText.title(
+  const AppText.title(
     this.text, {
     super.key,
     this.maxLines,
@@ -39,31 +39,31 @@ class AppText extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
   });
 
-  AppText.label(
+  const AppText.label(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.labelMd,
-    Color? color,
+    this.color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  }) : color = color;
+  });
 
-  AppText.body(
+  const AppText.body(
     this.text, {
     super.key,
     this.maxLines,
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.bodyMd,
-    Color? color,
+    this.color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
-  }) : color = color;
+  });
 
-  AppText.rich(
+  const AppText.rich(
     this.text, {
     super.key,
     this.maxLines,

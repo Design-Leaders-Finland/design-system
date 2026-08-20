@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 /// {@template app_colors}
 /// Colors class for themes which provides direct access with static fields.
 /// {@endtemplate}
@@ -16,11 +17,17 @@ final class AppColors {
 
   static const secondary = MaterialColor(0xFF614E96, {500: Color(0xFF614E96)});
 
-  static const complementary = MaterialColor(0xFF7D91A5, {500: Color(0xFF7D91A5)});
+  static const complementary = MaterialColor(0xFF7D91A5, {
+    500: Color(0xFF7D91A5),
+  });
 
-  static const textDefault = MaterialColor(0xFF1A1A2E, {500: Color(0xFF1A1A2E)});
+  static const textDefault = MaterialColor(0xFF1A1A2E, {
+    500: Color(0xFF1A1A2E),
+  });
 
-  static const textAlternate = MaterialColor(0xFF1A1A2E, {500: Color(0xFF1A1A2E)});
+  static const textAlternate = MaterialColor(0xFF1A1A2E, {
+    500: Color(0xFF1A1A2E),
+  });
 
   static const border = MaterialColor(0xFFD9E1F1, {500: Color(0xFFD9E1F1)});
 
@@ -33,7 +40,6 @@ final class AppColors {
   static const primaryOnBackground = MaterialColor(0xFF1B2A4A, {
     500: Color(0xFF1B2A4A),
   });
-
 
   static const accent = MaterialColor(0xFF2F927B, {500: Color(0xFF2F927B)});
   static const background = MaterialColor(0xFFFAFBFC, {500: Color(0xFFFAFBFC)});
@@ -49,4 +55,4 @@ final class AppColors {
   static const warning = Color(0xFFFFA500);
   static const danger = Color(0xFFB00020);
   static const success = Color(0xFF4CAF50);
-} 
+}

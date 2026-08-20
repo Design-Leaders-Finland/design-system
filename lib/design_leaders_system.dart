@@ -1,5 +1,6 @@
 library;
 
+export "data/about_data.dart";
 export "src/tokens/spacing/spacing.dart";
 export "src/tokens/typography/typography.dart";
 export "src/tokens/colors/colors.dart";

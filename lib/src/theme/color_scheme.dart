@@ -95,6 +95,8 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
     Color? secondary,
     Color? background,
     Color? text,
+    Color? textAlternate,
+    Color? textTertiary,
     Color? danger,
     Color? surface,
     Color? primaryOnDarkBackground,
@@ -113,7 +115,8 @@ class AppColorScheme extends ThemeExtension<AppColorScheme> {
       textTertiary: textTertiary ?? this.textTertiary,
       danger: danger ?? this.danger,
       surface: surface ?? this.surface,
-      primaryOnDarkBackground: primaryOnDarkBackground ?? this.primaryOnDarkBackground,
+      primaryOnDarkBackground:
+          primaryOnDarkBackground ?? this.primaryOnDarkBackground,
       primaryOnBackground: primaryOnBackground ?? this.primaryOnBackground,
       border: border ?? this.border,
       accent: accent ?? this.accent,
