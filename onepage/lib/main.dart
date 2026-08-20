@@ -5,6 +5,7 @@ import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:go_router/go_router.dart';
 import 'widgets/app_header.dart';
 import 'pages/widgets_page.dart';
+import 'pages/about_page.dart';
 
 const _kThemeModeKey = 'theme_mode';
 
@@ -55,6 +56,13 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
         path: '/widgets',
         builder: (context, state) =>
             WidgetsPage(onThemeChanged: _handleThemeChanged),
+      ),
+      GoRoute(
+        path: '/about',
+        builder: (context, state) => AboutPage(
+          data: AboutData.load(),
+          onThemeChanged: _handleThemeChanged,
+        ),
       ),
     ],
   );

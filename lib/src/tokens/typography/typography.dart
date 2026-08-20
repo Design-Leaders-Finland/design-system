@@ -3,7 +3,8 @@ import '../spacing/spacing.dart' show baseUnit;
 
 final class FontFamily {
   static const String figTree = 'packages/design_leaders_system/Figtree';
-  static const String asapCondensed = 'packages/design_leaders_system/Asap Condensed';
+  static const String asapCondensed =
+      'packages/design_leaders_system/Asap Condensed';
 }
 
 final class FontSize {

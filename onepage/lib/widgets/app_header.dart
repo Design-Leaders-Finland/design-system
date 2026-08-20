@@ -18,6 +18,8 @@ class AppHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final location = GoRouterState.of(context).uri.toString();
     final isHome = location == '/' || location.isEmpty;
+    final isWidgets = location == '/widgets';
+    final isAbout = location == '/about';
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -36,12 +38,16 @@ class AppHeader extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      InkWell(
-                        onTap: () => context.go('/'),
-                        child: AppText.display(
-                          'Design System Overview',
-                          style: AppTypography.displayLg,
-                          color: colors.textTertiary,
+                      Semantics(
+                        label: 'Design System Overview - Go to home page',
+                        button: true,
+                        child: InkWell(
+                          onTap: () => context.go('/'),
+                          child: AppText.display(
+                            'Design System Overview',
+                            style: AppTypography.displayLg,
+                            color: colors.textTertiary,
+                          ),
                         ),
                       ),
                       const SizedBox(width: Spacing.s8),
@@ -53,8 +59,14 @@ class AppHeader extends StatelessWidget {
                       const SizedBox(width: Spacing.s4),
                       _NavLink(
                         label: 'Widgets',
-                        isActive: !isHome,
+                        isActive: isWidgets,
                         onTap: () => context.go('/widgets'),
+                      ),
+                      const SizedBox(width: Spacing.s4),
+                      _NavLink(
+                        label: 'About',
+                        isActive: isAbout,
+                        onTap: () => context.go('/about'),
                       ),
                     ],
                   ),
@@ -89,20 +101,24 @@ class _NavLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Spacing.s3,
-          vertical: Spacing.s1_5,
-        ),
-        decoration: BoxDecoration(
-          color: isActive ? colors.primary.withAlpha(30) : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppBorderRadius.sm),
-        ),
-        child: AppText.label(
-          label,
-          color: isActive ? colors.primary : colors.textTertiary,
+    return Semantics(
+      label: '$label - Go to $label page',
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.s3,
+            vertical: Spacing.s1_5,
+          ),
+          decoration: BoxDecoration(
+            color: isActive ? colors.primary.withAlpha(30) : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+          ),
+          child: AppText.label(
+            label,
+            color: isActive ? colors.primary : colors.textTertiary,
+          ),
         ),
       ),
     );
@@ -117,20 +133,23 @@ class _ThemeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.light_mode, size: 18),
-        Switch(
-          value: isDark,
-          onChanged: onChanged,
-          activeThumbColor: AppColors.white,
-          activeTrackColor: AppColors.white.withAlpha(80),
-          inactiveThumbColor: AppColors.secondary,
-          inactiveTrackColor: AppColors.secondary.withAlpha(80),
-        ),
-        const Icon(Icons.dark_mode, size: 18),
-      ],
+    return Semantics(
+      label: 'Toggle dark mode',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.light_mode, size: 18),
+          Switch(
+            value: isDark,
+            onChanged: onChanged,
+            activeThumbColor: AppColors.white,
+            activeTrackColor: AppColors.white.withAlpha(80),
+            inactiveThumbColor: AppColors.secondary,
+            inactiveTrackColor: AppColors.secondary.withAlpha(80),
+          ),
+          const Icon(Icons.dark_mode, size: 18),
+        ],
+      ),
     );
   }
 }
