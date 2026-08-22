@@ -41,4 +41,15 @@ void main() {
     expect(AppTypography.bodyMd.fontFamily, equals(FontFamily.asapCondensed));
     expect(AppTypography.labelMd.fontFamily, equals(FontFamily.asapCondensed));
   });
+
+  test('sizing tokens follow the 4px base unit scale', () {
+    expect(Sizing.controlXs, equals(24));
+    expect(Sizing.controlMd, equals(40));
+    expect(Sizing.controlLg, equals(48));
+    expect(Sizing.iconSm, equals(16));
+    expect(Sizing.iconMd, equals(24));
+    expect(Sizing.touchTarget, equals(44));
+    expect(Sizing.sizeMd, equals(64));
+    expect(Sizing.sizeXl, equals(128));
+  });
 }

@@ -212,3 +212,39 @@ class Spacing {
   static const double s80 = baseUnit * 80; // 320px
   static const double s96 = baseUnit * 96; // 384px
 }
+
+/// {@template app_sizing}
+/// Sizing tokens for application components, based on the same 4px base unit
+/// as [Spacing]. Provides the most prominent component, icon, and touch-target
+/// sizes used across the design system.
+/// {@endtemplate}
+@immutable
+class Sizing {
+  static const double baseUnit = 4;
+
+  static double scale(double multiplier) => baseUnit * multiplier;
+
+  // ── Component heights ────────────────────────
+  static const double controlXs = baseUnit * 6; // 24px
+  static const double controlSm = baseUnit * 8; // 32px
+  static const double controlMd = baseUnit * 10; // 40px
+  static const double controlLg = baseUnit * 12; // 48px
+  static const double controlXl = baseUnit * 14; // 56px
+
+  // ── Icon sizes ───────────────────────────────
+  static const double iconSm = baseUnit * 4; // 16px
+  static const double iconMd = baseUnit * 6; // 24px
+  static const double iconLg = baseUnit * 8; // 32px
+  static const double iconXl = baseUnit * 12; // 48px
+
+  // ── Touch targets ────────────────────────────
+  static const double touchTarget = baseUnit * 11; // 44px
+  static const double touchTargetLg = baseUnit * 12; // 48px
+
+  // ── Common sizes ─────────────────────────────
+  static const double sizeXs = baseUnit * 4; // 16px
+  static const double sizeSm = baseUnit * 8; // 32px
+  static const double sizeMd = baseUnit * 16; // 64px
+  static const double sizeLg = baseUnit * 24; // 96px
+  static const double sizeXl = baseUnit * 32; // 128px
+}

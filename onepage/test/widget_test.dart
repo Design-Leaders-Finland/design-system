@@ -24,8 +24,10 @@ void main() {
     await tester.tap(find.text(label));
     // The widgets page contains an indeterminate CircularProgressIndicator
     // that animates forever, so use fixed pumps instead of pumpAndSettle.
+    // The shared page transition is 300ms, so pump in steps to let it complete.
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 300));
   }
 
   testWidgets('home page renders the design system overview', (tester) async {
@@ -33,6 +35,7 @@ void main() {
 
     expect(find.text('Key Color Tones'), findsOneWidget);
     expect(find.text('Typography (Context aware)'), findsOneWidget);
+    expect(find.text('Spacing & Sizing'), findsOneWidget);
 
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(app.themeMode, ThemeMode.light);

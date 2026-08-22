@@ -46,19 +46,26 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) =>
-            OnePageHome(onThemeChanged: _handleThemeChanged),
+        pageBuilder: (context, state) => AppPageTransition.buildPage(
+          key: const ValueKey('/'),
+          child: OnePageHome(onThemeChanged: _handleThemeChanged),
+        ),
       ),
       GoRoute(
         path: '/widgets',
-        builder: (context, state) =>
-            WidgetsPage(onThemeChanged: _handleThemeChanged),
+        pageBuilder: (context, state) => AppPageTransition.buildPage(
+          key: const ValueKey('/widgets'),
+          child: WidgetsPage(onThemeChanged: _handleThemeChanged),
+        ),
       ),
       GoRoute(
         path: '/about',
-        builder: (context, state) => AboutPage(
-          data: AboutData.load(),
-          onThemeChanged: _handleThemeChanged,
+        pageBuilder: (context, state) => AppPageTransition.buildPage(
+          key: const ValueKey('/about'),
+          child: AboutPage(
+            data: AboutData.load(),
+            onThemeChanged: _handleThemeChanged,
+          ),
         ),
       ),
     ],
@@ -112,6 +119,8 @@ class OnePageHome extends StatelessWidget {
                           _ColorPaletteSection(colors: colors),
                           const SizedBox(height: Spacing.s16),
                           _TypographySection(colors: colors),
+                          const SizedBox(height: Spacing.s16),
+                          _SpacingSizingSection(colors: colors),
                           const SizedBox(height: Spacing.s16),
                         ],
                       ),
@@ -372,6 +381,164 @@ class _TypographySection extends StatelessWidget {
             style: AppTypography.bodyStrong,
             maxLines: 1,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SpacingSizingSection extends StatelessWidget {
+  const _SpacingSizingSection({required this.colors});
+
+  final AppColorScheme colors;
+
+  static const _spacingTokens = <(String, double)>[
+    ('s1', Spacing.s1),
+    ('s2', Spacing.s2),
+    ('s3', Spacing.s3),
+    ('s4', Spacing.s4),
+    ('s6', Spacing.s6),
+    ('s8', Spacing.s8),
+    ('s12', Spacing.s12),
+    ('s16', Spacing.s16),
+    ('s24', Spacing.s24),
+    ('s32', Spacing.s32),
+  ];
+
+  static const _sizingTokens = <(String, double)>[
+    ('controlXs', Sizing.controlXs),
+    ('controlSm', Sizing.controlSm),
+    ('controlMd', Sizing.controlMd),
+    ('controlLg', Sizing.controlLg),
+    ('controlXl', Sizing.controlXl),
+    ('iconSm', Sizing.iconSm),
+    ('iconMd', Sizing.iconMd),
+    ('iconLg', Sizing.iconLg),
+    ('iconXl', Sizing.iconXl),
+    ('touchTarget', Sizing.touchTarget),
+    ('sizeSm', Sizing.sizeSm),
+    ('sizeMd', Sizing.sizeMd),
+    ('sizeLg', Sizing.sizeLg),
+    ('sizeXl', Sizing.sizeXl),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: Spacing.s6),
+      padding: const EdgeInsets.all(Spacing.s6),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+        boxShadow: AppShadow.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText.display('Spacing & Sizing', color: colors.textTertiary),
+          const SizedBox(height: Spacing.s6),
+          AppText.body(
+            'Spacing and sizing tokens are built on a 4px base unit, providing a consistent scale for layout gaps, component heights, icons, and touch targets.',
+          ),
+          const SizedBox(height: Spacing.s8),
+          AppText.heading('Spacing', color: colors.text),
+          const SizedBox(height: Spacing.s4),
+          ..._spacingTokens.map((token) {
+            return _SpacingRow(
+              label: token.$1,
+              value: token.$2,
+              color: colors.primary,
+              colors: colors,
+            );
+          }),
+          const SizedBox(height: Spacing.s8),
+          AppText.heading('Sizing', color: colors.text),
+          const SizedBox(height: Spacing.s4),
+          ..._sizingTokens.map((token) {
+            return _SizingRow(
+              label: token.$1,
+              value: token.$2,
+              color: colors.accent,
+              colors: colors,
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _SpacingRow extends StatelessWidget {
+  const _SpacingRow({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.colors,
+  });
+
+  final String label;
+  final double value;
+  final Color color;
+  final AppColorScheme colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.s1_5),
+      child: Row(
+        children: [
+          SizedBox(width: 120, child: AppText.label(label, color: colors.text)),
+          const SizedBox(width: Spacing.s4),
+          Expanded(
+            child: Container(
+              height: Spacing.s4,
+              width: value,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(AppBorderRadius.xs),
+              ),
+            ),
+          ),
+          const SizedBox(width: Spacing.s4),
+          AppText.label('${value.toInt()}px', color: colors.textTertiary),
+        ],
+      ),
+    );
+  }
+}
+
+class _SizingRow extends StatelessWidget {
+  const _SizingRow({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.colors,
+  });
+
+  final String label;
+  final double value;
+  final Color color;
+  final AppColorScheme colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: Spacing.s1_5),
+      child: Row(
+        children: [
+          SizedBox(width: 120, child: AppText.label(label, color: colors.text)),
+          const SizedBox(width: Spacing.s4),
+          Container(
+            width: value,
+            height: value,
+            decoration: BoxDecoration(
+              color: color.withAlpha(60),
+              borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+              border: Border.all(color: color),
+            ),
+          ),
+          const SizedBox(width: Spacing.s4),
+          AppText.label('${value.toInt()}px', color: colors.textTertiary),
         ],
       ),
     );
