@@ -2,7 +2,7 @@ name: Deploy to Netlify
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 concurrency: # new commits on the same branch/PR cancel the older, now-obsolete run
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,10 +17,17 @@ jobs:
     defaults:
       run:
         working-directory: onepage
-    
+
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: true
+
+      - name: Pull LFS data
+        # Checkout will only fetch the data but will not expand the files
+        run: git lfs pull
+
       - name: Setup Flutter SDK # local composite action: avoids marketplace actions with unpinned nested steps
         # Install the pinned Flutter SDK used by the repo.
         uses: design-leaders-finland/.github/actions/setup-flutter@b9dc79c591b43b0a6eac4d5dcb0c5e89be9af16b
@@ -45,7 +52,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@2304451b4038577aa079e27936cc520845d25345 # v4
         with:
-          publish-dir: 'onepage/build/web' # Does not follow default working-directory
+          publish-dir: "onepage/build/web" # Does not follow default working-directory
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
