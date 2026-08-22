@@ -1,0 +1,11 @@
+# https://docs.netlify.com/build/configure-builds/file-based-configuration/
+
+[build]
+publish = "build/web"
+
+[[headers]]
+for = "/*"
+[headers.values]
+# https://docs.flutter.dev/platform-integration/web/wasm#serve-the-built-output-with-an-http-server
+Cross-Origin-Embedder-Policy = "credentialless"
+Cross-Origin-Opener-Policy = "same-origin"
