@@ -71,7 +71,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Access colors via context extension
     final colors = context.colors;
-    
+
     return Scaffold(
       backgroundColor: colors.background,
       body: Column(
