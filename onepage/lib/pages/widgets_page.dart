@@ -233,13 +233,16 @@ class WidgetsPage extends StatelessWidget {
     WidgetCardItem(
       title: 'TabBar',
       description: 'A row of tabs.',
-      builder: (context) => GestureDetector(
-        onTap: () => _showSnack(context, 'TabBar tapped'),
-        child: const TabBar(
-          tabs: [
-            Tab(text: 'Tab 1'),
-            Tab(text: 'Tab 2'),
-          ],
+      builder: (context) => DefaultTabController(
+        length: 2,
+        child: GestureDetector(
+          onTap: () => _showSnack(context, 'TabBar tapped'),
+          child: const TabBar(
+            tabs: [
+              Tab(text: 'Tab 1'),
+              Tab(text: 'Tab 2'),
+            ],
+          ),
         ),
       ),
     ),
@@ -372,36 +375,39 @@ class WidgetsPage extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           int currentStep = 0;
-          return SizedBox(
-            width: 200,
-            child: Stepper(
-              currentStep: currentStep,
-              onStepContinue: () => setState(() => currentStep++),
-              onStepCancel: () => setState(() => currentStep--),
-              steps: [
-                Step(
-                  title: Text(
-                    'Step 1',
-                    style: Theme.of(context).textTheme.bodySmall,
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            child: SizedBox(
+              width: 360,
+              child: Stepper(
+                currentStep: currentStep,
+                onStepContinue: () => setState(() => currentStep++),
+                onStepCancel: () => setState(() => currentStep--),
+                steps: [
+                  Step(
+                    title: Text(
+                      'Step 1',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    content: Text(
+                      'Content',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    isActive: true,
                   ),
-                  content: Text(
-                    'Content',
-                    style: Theme.of(context).textTheme.bodySmall,
+                  Step(
+                    title: Text(
+                      'Step 2',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    content: Text(
+                      'Content',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    isActive: false,
                   ),
-                  isActive: true,
-                ),
-                Step(
-                  title: Text(
-                    'Step 2',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  content: Text(
-                    'Content',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  isActive: false,
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -739,7 +745,12 @@ class _WidgetCard extends StatelessWidget {
                   top: Radius.circular(AppBorderRadius.lg),
                 ),
               ),
-              child: Center(child: item.builder(context)),
+              child: Center(
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: item.builder(context),
+                ),
+              ),
             ),
           ),
           Expanded(

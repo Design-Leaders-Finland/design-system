@@ -1,13 +1,10 @@
-// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:go_router/go_router.dart';
+import 'theme_mode_store.dart';
 import 'widgets/app_header.dart';
 import 'pages/widgets_page.dart';
 import 'pages/about_page.dart';
-
-const _kThemeModeKey = 'theme_mode';
 
 void main() {
   runApp(const OnePageWebApp());
@@ -30,7 +27,7 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
   }
 
   Future<void> _loadThemeMode() async {
-    final saved = html.window.localStorage[_kThemeModeKey];
+    final saved = loadThemeMode();
     if (!mounted) return;
     setState(() {
       themeMode = saved == 'dark' ? ThemeMode.dark : ThemeMode.light;
@@ -38,7 +35,7 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
   }
 
   Future<void> _handleThemeChanged(bool isDark) async {
-    html.window.localStorage[_kThemeModeKey] = isDark ? 'dark' : 'light';
+    saveThemeMode(isDark ? 'dark' : 'light');
     if (!mounted) return;
     setState(() {
       themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
