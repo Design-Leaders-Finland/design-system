@@ -690,26 +690,18 @@ class _WidgetsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 900
-            ? 4
-            : constraints.maxWidth > 600
-            ? 3
-            : 2;
-
-        return GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: Spacing.s4,
-          mainAxisSpacing: Spacing.s4,
-          childAspectRatio: 0.85,
-          children: items.map((item) {
-            return _WidgetCard(item: item, colors: colors);
-          }).toList(),
-        );
-      },
+    return GridView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 300,
+        crossAxisSpacing: Spacing.s4,
+        mainAxisSpacing: Spacing.s4,
+        childAspectRatio: 0.85,
+      ),
+      children: items.map((item) {
+        return _WidgetCard(item: item, colors: colors);
+      }).toList(),
     );
   }
 }

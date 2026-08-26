@@ -186,90 +186,78 @@ class _ColorPaletteSection extends StatelessWidget {
           const SizedBox(height: Spacing.s6),
           AppText.body('Cardinal tones ...'),
           const SizedBox(height: Spacing.s4),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
-              return GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: Spacing.s3,
-                mainAxisSpacing: Spacing.s3,
-                childAspectRatio: 1.1,
-                children: paletteItems.take(4).map((item) {
-                  return _ColorSwatch(
-                    label: item[0] as String,
-                    color: item[1] as Color,
-                  );
-                }).toList(),
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 292,
+              crossAxisSpacing: Spacing.s3,
+              mainAxisSpacing: Spacing.s3,
+              childAspectRatio: 1.1,
+            ),
+            children: paletteItems.take(4).map((item) {
+              return _ColorSwatch(
+                label: item[0] as String,
+                color: item[1] as Color,
               );
-            },
+            }).toList(),
           ),
           const SizedBox(height: Spacing.s6),
           AppText.body('Semantic tones ...'),
           const SizedBox(height: Spacing.s6),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
-              return GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: Spacing.s3,
-                mainAxisSpacing: Spacing.s3,
-                childAspectRatio: 1.1,
-                children: paletteItems.skip(4).take(4).map((item) {
-                  return _ColorSwatch(
-                    label: item[0] as String,
-                    color: item[1] as Color,
-                  );
-                }).toList(),
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 292,
+              crossAxisSpacing: Spacing.s3,
+              mainAxisSpacing: Spacing.s3,
+              childAspectRatio: 1.1,
+            ),
+            children: paletteItems.skip(4).take(4).map((item) {
+              return _ColorSwatch(
+                label: item[0] as String,
+                color: item[1] as Color,
               );
-            },
+            }).toList(),
           ),
           const SizedBox(height: Spacing.s6),
           AppText.body('Inscriptive tones ...'),
           const SizedBox(height: Spacing.s6),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
-              return GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: Spacing.s3,
-                mainAxisSpacing: Spacing.s3,
-                childAspectRatio: 1.1,
-                children: paletteItems.skip(8).take(4).map((item) {
-                  return _ColorSwatch(
-                    label: item[0] as String,
-                    color: item[1] as Color,
-                  );
-                }).toList(),
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 292,
+              crossAxisSpacing: Spacing.s3,
+              mainAxisSpacing: Spacing.s3,
+              childAspectRatio: 1.1,
+            ),
+            children: paletteItems.skip(8).take(4).map((item) {
+              return _ColorSwatch(
+                label: item[0] as String,
+                color: item[1] as Color,
               );
-            },
+            }).toList(),
           ),
           const SizedBox(height: Spacing.s6),
           AppText.body('Layout tones ...'),
           const SizedBox(height: Spacing.s6),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 800 ? 6 : 3;
-              return GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: Spacing.s3,
-                mainAxisSpacing: Spacing.s3,
-                childAspectRatio: 1.1,
-                children: paletteItems.skip(12).take(4).map((item) {
-                  return _ColorSwatch(
-                    label: item[0] as String,
-                    color: item[1] as Color,
-                  );
-                }).toList(),
+          GridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 292,
+              crossAxisSpacing: Spacing.s3,
+              mainAxisSpacing: Spacing.s3,
+              childAspectRatio: 1.1,
+            ),
+            children: paletteItems.skip(12).take(4).map((item) {
+              return _ColorSwatch(
+                label: item[0] as String,
+                color: item[1] as Color,
               );
-            },
+            }).toList(),
           ),
         ],
       ),
