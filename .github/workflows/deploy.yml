@@ -49,6 +49,9 @@ jobs:
 
       - run: flutter build web --release --wasm
 
+      - name: Netlify config
+        run: cp ../netlify.toml build/web/
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@2304451b4038577aa079e27936cc520845d25345 # v4
         with:
