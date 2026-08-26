@@ -74,7 +74,7 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Design System Overview',
+      title: 'Design Leaders System',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
@@ -137,10 +137,7 @@ class OnePageHome extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1200),
-                child: AppHeader(
-                  isNarrow: isNarrow,
-                  onThemeChanged: onThemeChanged,
-                ),
+                child: AppHeader(onThemeChanged: onThemeChanged),
               ),
             ),
           ),

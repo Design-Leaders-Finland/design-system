@@ -13,14 +13,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  // The header nav links are inside a horizontally scrolling row that clips
-  // the trailing links, so scroll it into view before tapping a nav link.
+  // The header nav links are laid out responsively and are always visible, so
+  // tap them directly.
   Future<void> tapNavLink(WidgetTester tester, String label) async {
-    await tester.drag(
-      find.byType(SingleChildScrollView),
-      const Offset(-500, 0),
-    );
-    await tester.pumpAndSettle();
     await tester.tap(find.text(label));
     // The widgets page contains an indeterminate CircularProgressIndicator
     // that animates forever, so use fixed pumps instead of pumpAndSettle.

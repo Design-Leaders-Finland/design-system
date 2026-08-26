@@ -652,10 +652,7 @@ class WidgetsPage extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1200),
-                child: AppHeader(
-                  isNarrow: isNarrow,
-                  onThemeChanged: onThemeChanged,
-                ),
+                child: AppHeader(onThemeChanged: onThemeChanged),
               ),
             ),
           ),
