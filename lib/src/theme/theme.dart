@@ -4,6 +4,18 @@ import "text_scheme.dart";
 import "../utils/utils.dart";
 import "../tokens/spacing/spacing.dart";
 
+/// Light and dark [ThemeData] bundled together so apps can adopt the whole
+/// design system with a single accessor ([AppTheme.themes]).
+final class AppThemeData {
+  const AppThemeData({required this.light, required this.dark});
+
+  /// The pre-configured light theme.
+  final ThemeData light;
+
+  /// The pre-configured dark theme.
+  final ThemeData dark;
+}
+
 final class AppTheme {
   static ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
@@ -18,6 +30,17 @@ final class AppTheme {
     textTheme: appTextTheme,
     extensions: [AppColorScheme.dark(), AppTextScheme.dark()],
   );
+
+  /// Both pre-configured themes in one object for the easiest possible setup:
+  ///
+  /// ```dart
+  /// MaterialApp(
+  ///   theme: AppTheme.themes.light,
+  ///   darkTheme: AppTheme.themes.dark,
+  /// );
+  /// ```
+  static AppThemeData get themes =>
+      AppThemeData(light: lightTheme, dark: darkTheme);
 }
 
 extension AppContextExtension on BuildContext {
