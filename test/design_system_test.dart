@@ -42,6 +42,41 @@ void main() {
     expect(AppTypography.labelMd.fontFamily, equals(FontFamily.asapCondensed));
   });
 
+  test('AppTheme.themes exposes light and dark themes with design extensions', () {
+    final themes = AppTheme.themes;
+
+    expect(themes.light.brightness, Brightness.light);
+    expect(themes.dark.brightness, Brightness.dark);
+    expect(themes.light.useMaterial3, isTrue);
+    expect(themes.dark.useMaterial3, isTrue);
+
+    // Both carry the custom color & text schemes so consumers get everything
+    // from a single accessor.
+    expect(themes.light.extension<AppColorScheme>(), isNotNull);
+    expect(themes.light.extension<AppTextScheme>(), isNotNull);
+    expect(themes.dark.extension<AppColorScheme>(), isNotNull);
+    expect(themes.dark.extension<AppTextScheme>(), isNotNull);
+
+    // The two bundled themes still use the distinct light/dark palettes.
+    final light = themes.light.extension<AppColorScheme>()!;
+    final dark = themes.dark.extension<AppColorScheme>()!;
+    expect(light.background, isNot(equals(dark.background)));
+    expect(light.surface, isNot(equals(dark.surface)));
+    expect(light.text, isNot(equals(dark.text)));
+  });
+
+  test('AppTheme.themes matches the individual theme accessors', () {
+    final themes = AppTheme.themes;
+
+    expect(themes.light.extension<AppColorScheme>()!.primary,
+        equals(AppColors.primary));
+    expect(
+        themes.dark.extension<AppColorScheme>()!.primary,
+        equals(AppColors.darkPrimary),
+    );
+    expect(themes.dark.colorScheme.primary, equals(AppColors.darkPrimary));
+  });
+
   test('sizing tokens follow the 4px base unit scale', () {
     expect(Sizing.controlXs, equals(24));
     expect(Sizing.controlMd, equals(40));

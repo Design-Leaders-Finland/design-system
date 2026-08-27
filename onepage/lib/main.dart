@@ -75,8 +75,8 @@ class _OnePageWebAppState extends State<OnePageWebApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Design Leaders System',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.themes.light,
+      darkTheme: AppTheme.themes.dark,
       themeMode: themeMode,
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
