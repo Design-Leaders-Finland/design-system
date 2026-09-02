@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'
     show ColorScheme, Brightness, ThemeExtension, Color;
 import 'package:flutter/foundation.dart' show immutable;
+
 import "../tokens/colors/colors.dart";
 
 const ColorScheme darkColorScheme = ColorScheme(

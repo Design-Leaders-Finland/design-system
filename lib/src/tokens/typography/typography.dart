@@ -1,4 +1,5 @@
 import 'package:flutter/painting.dart';
+
 import '../spacing/spacing.dart' show baseUnit;
 
 final class FontFamily {
