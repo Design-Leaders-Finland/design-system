@@ -1,8 +1,12 @@
 import 'package:widgetbook/widgetbook.dart';
 
-import 'actions_inputs.dart';
-import 'display_layout.dart';
-import 'feedback_tokens.dart';
+import 'actions.dart';
+import 'design_system.dart';
+import 'display.dart';
+import 'feedback.dart';
+import 'inputs.dart';
+import 'layout.dart';
+import 'progress.dart';
 
 // The full navigation tree handed to `Widgetbook.material`.
 //

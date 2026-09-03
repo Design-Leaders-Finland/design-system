@@ -1,11 +1,16 @@
-// Catalog smoke test.
+// Catalog + home smoke tests.
 //
-// This is a pure-Dart structural test: it walks the Widgetbook node tree that
-// `main.dart` hands to `Widgetbook.material` and asserts the catalog is
-// well-formed and comprehensive. Nothing is rendered, so the use-case builders
-// (including the network `Image`) are never invoked.
+// The catalog test is pure-Dart: it walks the Widgetbook node tree that
+// `main.dart` hands to `Widgetbook.material` and asserts it is well-formed and
+// comprehensive. Nothing is rendered there, so the use-case builders (including
+// the network `Image`) are never invoked. The home test pumps `DesignSystemHome`
+// to confirm the landing page builds and shows the company + tech info.
 
+import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:design_widgetbook/catalog/material_catalog.dart';
+import 'package:design_widgetbook/gallery_header.dart';
+import 'package:design_widgetbook/home.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -74,6 +79,31 @@ void main() {
       for (final category in materialDirectories) {
         expect(category.children, isNotEmpty, reason: '${category.name} empty');
       }
+    });
+  });
+
+  group('Home page', () {
+    testWidgets('renders company and design system info', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: DesignSystemHome()));
+      // Single pump only: the "Loading" button's progress indicator animates
+      // forever, so pumpAndSettle would time out.
+      await tester.pump();
+
+      expect(find.text('Design Leaders Finland Oy'), findsOneWidget);
+      expect(find.textContaining('Reduce design debt'), findsOneWidget);
+      expect(find.textContaining('Widgetbook v3'), findsOneWidget);
+      expect(find.text('designleaders.fi'), findsOneWidget);
+      expect(find.byType(SolidButton), findsWidgets);
+    });
+  });
+
+  group('Gallery header', () {
+    testWidgets('renders the brand mark and wordmark', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: GalleryHeader()));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.design_services), findsOneWidget);
+      expect(find.text('Design Leaders'), findsOneWidget);
     });
   });
 }

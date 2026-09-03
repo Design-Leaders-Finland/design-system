@@ -40,6 +40,10 @@ dependencies:
   # Widgetbook v3 runtime for the component gallery (web only).
   widgetbook: ^3.25.0
 
+  # localStorage access for persisting the theme-mode choice on web. Used via a
+  # conditional import (see theme_mode_store.dart), so it stays web-only.
+  web: ^1.1.1
+
   # The design system whose colors/themes are showcased by this Widgetbook.
   design_leaders_system:
     path: ..

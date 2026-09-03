@@ -37,6 +37,87 @@ WidgetbookCategory category(String name, List<WidgetbookNode> children) {
   return WidgetbookCategory(name: name, children: children);
 }
 
+// ── Knob helpers ─────────────────────────────────────────────────────────────
+
+/// Renders a value with a fixed set of [options] using the gallery's control
+/// convention:
+///
+/// * **two options** (a binary choice, or an enum with exactly two values) are
+///   shown as a [Switch] via Widgetbook's boolean knob — the switch's
+///   `description` spells out which value each side maps to;
+/// * **more than two options** are shown as a dropdown.
+///
+/// [labelBuilder] customises how a value reads in the dropdown/description;
+/// enum values default to their `.name`, everything else to `toString()`.
+T optionKnob<T>(
+  BuildContext context, {
+  required String label,
+  required List<T> options,
+  required T initial,
+  String Function(T value)? labelBuilder,
+  String? description,
+}) {
+  if (options.length < 2) return options.first;
+  final describe = labelBuilder ?? _defaultLabel<T>;
+
+  if (options.length == 2) {
+    final isOn = context.knobs.boolean(
+      label: label,
+      description:
+          description ??
+          'off: ${describe(options[0])} · on: ${describe(options[1])}',
+      initialValue: initial == options[1],
+    );
+    return isOn ? options[1] : options[0];
+  }
+
+  return context.knobs.object.dropdown<T>(
+    label: label,
+    description: description,
+    options: options,
+    initialOption: initial,
+    labelBuilder: describe,
+  );
+}
+
+String _defaultLabel<T>(T value) => value is Enum ? value.name : '$value';
+
+/// A curated set of Material icons offered by [iconKnob], keyed by a readable
+/// name so the dropdown shows `star` rather than an opaque [IconData].
+const Map<String, IconData> iconChoices = {
+  'add': Icons.add,
+  'edit': Icons.edit,
+  'delete': Icons.delete,
+  'favorite': Icons.favorite,
+  'star': Icons.star,
+  'settings': Icons.settings,
+  'share': Icons.share,
+  'download': Icons.download,
+  'search': Icons.search,
+  'home': Icons.home,
+  'person': Icons.person,
+  'mail': Icons.mail,
+  'notifications': Icons.notifications,
+  'check': Icons.check,
+  'close': Icons.close,
+  'menu': Icons.menu,
+};
+
+/// A dropdown knob that picks one [IconData] from [iconChoices].
+IconData iconKnob(
+  BuildContext context, {
+  String label = 'Icon',
+  IconData initial = Icons.star,
+}) {
+  return context.knobs.object.dropdown<IconData>(
+    label: label,
+    options: iconChoices.values.toList(),
+    initialOption: initial,
+    labelBuilder: (icon) =>
+        iconChoices.entries.firstWhere((entry) => entry.value == icon).key,
+  );
+}
+
 // ── State host ───────────────────────────────────────────────────────────────
 
 /// A tiny stateful host that lets an otherwise-stateless use case own a
