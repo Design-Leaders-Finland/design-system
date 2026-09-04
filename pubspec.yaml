@@ -6,8 +6,8 @@ homepage: https://design-leaders-design-system.netlify.app/
 repository: https://github.com/Design-Leaders-Finland/design-system
 
 environment:
-  sdk: ^3.12.1
-  flutter: ">=3.47.1"
+  sdk: ^3.13.2
+  flutter: ">=3.47.2"
 
 dependencies:
   flutter:

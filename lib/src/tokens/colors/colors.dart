@@ -31,7 +31,7 @@ final class AppColors {
 
   static const border = MaterialColor(0xFFD9E1F1, {500: Color(0xFFD9E1F1)});
 
-  static const hyperlink = MaterialColor(0xFF0000FF, {500: Color(0xFF0000FF)});
+  static const hyperlink = Color.fromARGB(255, 24, 24, 254);
 
   static const textDefaultOnBackground = MaterialColor(0xFF1A1A2E, {
     500: Color(0xFF1A1A2E),
