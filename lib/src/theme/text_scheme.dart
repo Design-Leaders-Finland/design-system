@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'
     show ThemeExtension, TextTheme, TextStyle;
 import 'package:flutter/foundation.dart' show immutable;
+
 import "../tokens/typography/typography.dart";
 
 TextTheme appTextTheme = TextTheme(

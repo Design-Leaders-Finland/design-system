@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+  <head>
+    <base href="$FLUTTER_BASE_HREF" />
+
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="Design System of Design Leaders Finland" />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Design System of Design Leaders Finland" />
+    <link rel="apple-touch-icon" href="icons/icon-92.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>Design System of Design Leaders Finland</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <style>
+      :root {
+        --dls-bg: lab(15.204 0 -0.00000596046);
+        --dls-accent: #2f927b; /* AppColors.accent */
+        --dls-track: rgba(140, 140, 139, 0.25);
+        --dls-ink-size: 8rem;
+        --dls-stroke: 1rem;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--dls-bg);
+      }
+
+      /* Full-screen splash. Absolutely positioned so it overlays the Flutter
+       view (which is appended to <body> by the engine) until it is removed. */
+      #loading {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        background: var(--dls-bg);
+      }
+
+      #loading h1,
+      #loading p {
+        margin: 0;
+        font-family: "Figtree", system-ui, sans-serif;
+        color: white;
+        text-align: center;
+      }
+
+      #loading h1 {
+        font-size: 1.5rem; /* AppTypography.headlineMd */
+        font-weight: 600;
+      }
+
+      #loading p {
+        font-size: 1rem; /* AppTypography.bodyMd */
+        font-weight: 400;
+        opacity: 0.8;
+      }
+
+      .dls-ink {
+        width: var(--dls-ink-size);
+        height: var(--dls-ink-size);
+        display: block;
+        overflow: visible;
+      }
+
+      /* Seamless donut track, no cap so there is no visible joint. */
+      .dls-ink-track {
+        fill: none;
+        stroke: var(--dls-track);
+        stroke-width: var(--dls-stroke);
+      }
+
+      .dls-ink-ring {
+        fill: none;
+        stroke: var(--dls-accent);
+        stroke-width: var(--dls-stroke);
+        transform-origin: 50% 50%;
+        animation: dls-ring 1.4s ease-in-out infinite;
+      }
+
+      /* The donut fills clockwise from empty to full, then empties again also clockwise:
+       the second half keeps rotating the same direction so the trailing edge stays put
+       while the leading edge chases it around instead of unwinding backwards. */
+      @keyframes dls-ring {
+        0% {
+          stroke-dasharray: 0 100;
+          transform: rotate(-90deg);
+        }
+        50% {
+          stroke-dasharray: 100 0;
+          transform: rotate(-90deg);
+        }
+        100% {
+          stroke-dasharray: 0 100;
+          transform: rotate(270deg);
+        }
+      }
+
+      /* Respect users who prefer reduced motion: keep it moving, just slower. */
+      @media (prefers-reduced-motion: reduce) {
+        .dls-ink-ring {
+          animation-duration: 3.6s;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Instantly-visible loading animation. Purely HTML/CSS/SVG so it paints
+       before any Dart/WASM code is fetched, and stays on screen until the
+       Flutter engine is ready (see inline bootstrap below). -->
+    <div id="loading" role="status" aria-live="polite" aria-label="Loading the Widgetbook">
+      <svg class="dls-ink" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+        <!-- Persistent donut track. -->
+        <circle class="dls-ink-track" cx="60" cy="60" r="42" pathLength="100" />
+        <!-- Donut that fills and empties. -->
+        <circle class="dls-ink-ring" cx="60" cy="60" r="42" pathLength="100" />
+      </svg>
+      <h1>Design System of Design Leaders Finland</h1>
+      <p>Loading...</p>
+    </div>
+
+    <script src="flutter_bootstrap.js" async></script>
+    <script>
+      // Remove the splash once the Flutter engine renders its first frame.
+      window.addEventListener("flutter-first-frame", function () {
+        var splash = document.getElementById("loading");
+        if (splash) splash.remove();
+      });
+    </script>
+  </body>
+</html>

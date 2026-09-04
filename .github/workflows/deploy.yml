@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: onepage
+        working-directory: widgetbook
 
     steps:
       - name: Checkout code
@@ -55,7 +55,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@2304451b4038577aa079e27936cc520845d25345 # v4
         with:
-          publish-dir: "onepage/build/web" # Does not follow default working-directory
+          publish-dir: "widgetbook/build/web" # Does not follow default working-directory
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"

@@ -103,6 +103,22 @@ The demo app is not included in the package itself but serves as a reference imp
 
 Its automatically deployed to Netlify on every push to `main` branch and can be viewed at [https://design-leaders-design-system.netlify.app/](https://design-leaders-design-system.netlify.app/).
 
+## Widgetbook
+
+Interactive [Widgetbook](https://www.widgetbook.io/) gallery for the Design
+Leaders Finland design system.
+
+```bash
+# Enter the directory
+cd widgetbook
+
+# Install dependencies
+flutter pub get
+
+# Run the gallery in Chrome
+flutter run -d chrome
+```
+
 ## Development
 
 ```bash

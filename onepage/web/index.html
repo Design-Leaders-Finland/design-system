@@ -51,8 +51,8 @@
         --dls-bg: #fafbfc; /* AppColors.background */
         --dls-accent: #2f927b; /* AppColors.accent */
         --dls-track: rgba(27, 42, 74, 0.14); /* subtle ~10% of primary #1B2A4A */
-        --dls-ink-size: 72px;
-        --dls-stroke: 9;
+        --dls-ink-size: 4rem;
+        --dls-stroke: 0.5625rem;
       }
 
       html,
@@ -80,121 +80,43 @@
         overflow: visible;
       }
 
+      /* Seamless donut track, no cap so there is no visible joint. */
       .dls-ink-track {
         fill: none;
         stroke: var(--dls-track);
         stroke-width: var(--dls-stroke);
-        stroke-linecap: round;
-        /* Leave a small gap at the top of the ring (like the package's inkDrop
-           track arc which spans 90..360 deg). pathLength=100 keeps dashes simple. */
-        stroke-dasharray: 96 4;
-        transform: rotate(-90deg);
-        transform-origin: 60px 60px;
       }
 
       .dls-ink-ring {
         fill: none;
         stroke: var(--dls-accent);
         stroke-width: var(--dls-stroke);
-        stroke-linecap: round;
-        transform-origin: 60px 60px;
+        transform-origin: 50% 50%;
         animation: dls-ring 1.4s ease-in-out infinite;
       }
 
-      .dls-ink-drop {
-        animation: dls-drop 1.4s ease-in-out infinite;
-      }
-
-      .dls-ink-drop circle {
-        fill: var(--dls-accent);
-        animation: dls-drop-dot 1.4s ease-in-out infinite;
-      }
-
-      /* A droplet falls into the centre of the ring, then the ring blooms out
-         from it into a full circle, which peels back as the loop resets - the
-         same "ink drop -> ring -> ink drop" motion of
-         LoadingAnimationWidget.inkDrop (1400ms loop). */
+      /* The donut fills clockwise from empty to full, then empties again also clockwise:
+         the second half keeps rotating the same direction so the trailing edge stays put
+         while the leading edge chases it around instead of unwinding backwards. */
       @keyframes dls-ring {
         0% {
-          stroke-dasharray: 1.5 100;
+          stroke-dasharray: 0 100;
           transform: rotate(-90deg);
-          opacity: 0;
         }
-        10% {
-          stroke-dasharray: 1.5 100;
-          opacity: 1;
-        }
-        56% {
-          stroke-dasharray: 99 100;
+        50% {
+          stroke-dasharray: 100 0;
           transform: rotate(-90deg);
-          opacity: 1;
-        }
-        74% {
-          stroke-dasharray: 99 100;
-          transform: rotate(-90deg);
-          opacity: 1;
-        }
-        88% {
-          stroke-dasharray: 6 100;
-          transform: rotate(-90deg) rotate(300deg);
-          opacity: 0;
         }
         100% {
-          stroke-dasharray: 1.5 100;
-          transform: rotate(-90deg) rotate(300deg);
-          opacity: 0;
+          stroke-dasharray: 0 100;
+          transform: rotate(270deg);
         }
       }
 
-      @keyframes dls-drop {
-        0% {
-          transform: translateY(-16px);
-          opacity: 0;
-        }
-        8% {
-          transform: translateY(-16px);
-          opacity: 1;
-        }
-        30% {
-          transform: translateY(26px);
-          opacity: 1;
-        }
-        40% {
-          transform: translateY(34px);
-          opacity: 0;
-        }
-        100% {
-          transform: translateY(34px);
-          opacity: 0;
-        }
-      }
-
-      @keyframes dls-drop-dot {
-        0% {
-          r: 7;
-        }
-        56% {
-          r: 0.5;
-        }
-        100% {
-          r: 0.5;
-        }
-      }
-
-      /* Respect users who prefer reduced motion: freeze on the track ring. */
+      /* Respect users who prefer reduced motion: keep it moving, just slower. */
       @media (prefers-reduced-motion: reduce) {
         .dls-ink-ring {
-          animation: none;
-          opacity: 0;
-        }
-        .dls-ink-drop,
-        .dls-ink-drop circle {
-          animation: none;
-          opacity: 0;
-        }
-        .dls-ink-track {
-          stroke: var(--dls-accent);
-          opacity: 0.6;
+          animation-duration: 3.6s;
         }
       }
     </style>
@@ -206,18 +128,14 @@
       </div>
     </noscript>
 
-    <!-- Instantly-visible ink-drop loading animation. Purely HTML/CSS/SVG so it
+    <!-- Instantly-visible loading animation. Purely HTML/CSS/SVG so it
          paints before any Dart/WASM code is fetched, and stays on screen until
          the Flutter WASM engine is ready (see inline bootstrap below). -->
     <div id="loading" role="status" aria-live="polite" aria-label="Loading the Design System">
       <svg class="dls-ink" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-        <!-- Persistent ring track with a gap at the top. -->
+        <!-- Persistent donut track. -->
         <circle class="dls-ink-track" cx="60" cy="60" r="42" pathLength="100" />
-        <!-- Falling ink drop. -->
-        <g class="dls-ink-drop">
-          <circle cx="60" cy="18" r="7" />
-        </g>
-        <!-- Ring that blooms out from the drop to a full circle. -->
+        <!-- Donut that fills and empties. -->
         <circle class="dls-ink-ring" cx="60" cy="60" r="42" pathLength="100" />
       </svg>
     </div>
