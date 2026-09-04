@@ -77,11 +77,14 @@ void main() {
             );
           },
         ),
-        AlignmentAddon(),
         GridAddon(8),
         TextScaleAddon(),
         ZoomAddon(),
         InspectorAddon(),
+        // Must be innermost: addons wrap outside-in, and GridAddon's
+        // background fills all available space, so Alignment needs to sit
+        // right next to the use case to actually have room to move it.
+        AlignmentAddon(),
       ],
       integrations: [_PersistThemeMode()],
     ),

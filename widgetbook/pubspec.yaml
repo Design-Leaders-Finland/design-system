@@ -2,7 +2,7 @@ name: design_widgetbook
 description: "Widgetbook gallery of the Design Leaders Finland design system (web only)."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -35,7 +35,7 @@ dependencies:
   # Bundles the Cupertino Icons font. A transitive Widgetbook dependency
   # (device frame / accessibility tooling) references `CupertinoIcons`; without
   # this the web build warns about a missing font package.
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
 
   # Widgetbook v3 runtime for the component gallery (web only).
   widgetbook: ^3.25.0
@@ -64,7 +64,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

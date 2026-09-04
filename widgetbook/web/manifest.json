@@ -1,18 +1,18 @@
 {
-    "name": "design_widgetbook",
-    "short_name": "design_widgetbook",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
-    "prefer_related_applications": false,
-    "icons": [
-        {
-            "src": "icons/icon-92.png",
-            "sizes": "92x92",
-            "type": "image/png"
-        }
-    ]
+  "name": "Design System Widgetbook",
+  "short_name": "Design System",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1B2A4A",
+  "description": "Design Leaders Finland design system — Widgetbook gallery.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-92.png",
+      "sizes": "92x92",
+      "type": "image/png"
+    }
+  ]
 }

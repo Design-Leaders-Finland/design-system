@@ -1,17 +1,27 @@
-# design_widgetbook
+# Design System Widgetbook
 
-A new Flutter project.
+Interactive [Widgetbook](https://www.widgetbook.io/) gallery for the Design
+Leaders Finland design system. It showcases every component, token, and layout
+in the system with live previews, theme switching (system / light / dark), and
+configurable knobs.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is a web-only Flutter application that renders the design system catalog.
 
-A few resources to get you started if this is your first Flutter project:
+    # Install dependencies
+    flutter pub get
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+    # Run the gallery in Chrome
+    flutter run -d chrome
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Structure
+
+- `lib/main.dart` — app entry point; wires up the Widgetbook, theme addon, and
+  theme-mode persistence.
+- `lib/home.dart` — the Widgetbook home/landing page.
+- `lib/gallery_header.dart` — branded navigation header.
+- `lib/catalog/` — component, token, and layout use cases shown in the gallery.
+
+The design system itself lives in the parent package and is consumed as a
+dependency; see the root `README.md` for details on the tokens and widgets.
