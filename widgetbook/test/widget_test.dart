@@ -44,8 +44,7 @@ void main() {
     });
 
     test('lists a broad set of Material + design system widgets', () {
-      // The catalog should be comprehensive: comfortably more than the ~40
-      // widgets in the onepage gallery.
+      // The catalog should be comprehensive
       expect(components.length, greaterThanOrEqualTo(40));
 
       // A representative widget from each group must be present.

@@ -135,9 +135,8 @@ class AppOutlinedButton extends BaseButton {
   ButtonStyle resolveStyle(ThemeData theme, ButtonStyle? btnStyle) {
     final styles = super._resolveBtnStyle(theme);
 
-    return OutlinedButton.styleFrom(
-      foregroundColor: styles['foregroundColor'],
-    ).merge(style);
+    return OutlinedButton.styleFrom(foregroundColor: styles['foregroundColor'])
+        .merge(style);
   }
 
   @override

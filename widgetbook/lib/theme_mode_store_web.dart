@@ -3,8 +3,6 @@ library;
 
 import 'package:web/web.dart' as web;
 
-// Distinct from the `onepage` app's key so the two galleries never interfere
-// (the onepage store only knows 'light'/'dark', not 'system').
 const _kThemeModeKey = 'widgetbook_theme_mode';
 
 /// Loads the persisted theme mode from localStorage.

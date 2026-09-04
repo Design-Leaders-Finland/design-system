@@ -7,104 +7,103 @@
 # 1. Build Settings
 # Since the site is deployed manually without build steps, the command is empty.
 [build]
-  command = ""
-  publish = "."
+command = ""
+publish = "."
 
 # 2. Global Security Headers
 # Applied to all routes to ensure a strong baseline security posture.
 [[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+for = "/*"
+[headers.values]
+X-Content-Type-Options = "nosniff"
+X-Frame-Options = "DENY"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 # 3. WebAssembly (WASM) Specific Headers
 # Critical: Browsers require the correct MIME type to compile WASM modules.
 [[headers]]
-  for = "/*.wasm"
-  [headers.values]
-    Content-Type = "application/wasm"
-    # Cache aggressively for 1 year (assuming content-hashed filenames like main.a1b2.wasm)
-    Cache-Control = "public, max-age=31536000, immutable"
-    
-    # https://docs.flutter.dev/platform-integration/web/wasm#serve-the-built-output-with-an-http-server
-    Cross-Origin-Embedder-Policy = "credentialless"
-    Cross-Origin-Opener-Policy = "same-origin"
+for = "/*.wasm"
+[headers.values]
+Content-Type = "application/wasm"
+# Cache aggressively for 1 year (assuming content-hashed filenames like main.a1b2.wasm)
+Cache-Control = "public, max-age=31536000, immutable"
+# https://docs.flutter.dev/platform-integration/web/wasm#serve-the-built-output-with-an-http-server
+Cross-Origin-Embedder-Policy = "credentialless"
+Cross-Origin-Opener-Policy = "same-origin"
 
 # 4. Pre-compressed WASM Assets (Optional but recommended for performance)
 # If you serve pre-compressed .wasm.gz or .wasm.br files, Netlify must be explicitly told how to serve them.
 [[headers]]
-  for = "/*.wasm.gz"
-  [headers.values]
-    Content-Type = "application/wasm"
-    Content-Encoding = "gzip"
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.wasm.gz"
+[headers.values]
+Content-Type = "application/wasm"
+Content-Encoding = "gzip"
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.wasm.br"
-  [headers.values]
-    Content-Type = "application/wasm"
-    Content-Encoding = "br"
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.wasm.br"
+[headers.values]
+Content-Type = "application/wasm"
+Content-Encoding = "br"
+Cache-Control = "public, max-age=31536000, immutable"
 
 # 5. Static Assets Long-Term Caching (1 Year)
 # Maximize CDN and browser cache hit rates for immutable static assets.
 [[headers]]
-  for = "/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.js"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.css"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.png"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.png"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.jpg"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.jpg"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.webp"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.webp"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.svg"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.svg"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/*.woff2"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+for = "/*.woff2"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 # 6. HTML and Entry Points (Short-Term / Must-Revalidate)
 # Ensure users always get the latest HTML entry point, which then loads the cached assets.
 [[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+for = "/*.html"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
 
 # 7. Service Workers and Manifests
 # Service workers must never be cached long-term to ensure updates are detected immediately.
 [[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+for = "/sw.js"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Cache-Control = "public, max-age=86400" # 1 day
+for = "/manifest.json"
+[headers.values]
+Cache-Control = "public, max-age=86400" # 1 day
 
 # 8. Single Page Application (SPA) Redirects (Optional)
 # If ds.designleaders.fi is an SPA (e.g., React, Vue, Blazor WASM), uncomment below 

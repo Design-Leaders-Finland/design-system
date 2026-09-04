@@ -89,20 +89,6 @@ class MyHomePage extends StatelessWidget {
 }
 ```
 
-## Demo App
-
-The `onepage/` folder contains a demo application showcasing the design system components. It demonstrates:
-
-- Light and dark theme switching
-- Typography usage
-- Color palette display
-- Spacing and layout with tokens
-- Button variants
-
-The demo app is not included in the package itself but serves as a reference implementation.
-
-Its automatically deployed to Netlify on every push to `main` branch and can be viewed at [https://design-leaders-design-system.netlify.app/](https://design-leaders-design-system.netlify.app/).
-
 ## Widgetbook
 
 Interactive [Widgetbook](https://www.widgetbook.io/) gallery for the Design
@@ -118,6 +104,10 @@ flutter pub get
 # Run the gallery in Chrome
 flutter run -d chrome
 ```
+
+The widgetbook is automatically deployed to Netlify on every push to `main` branch and can be viewed at
+[`design-leaders-design-system.netlify.app`](https://design-leaders-design-system.netlify.app/) and
+[`ds.designleaders.fi`](https://ds.designleaders.fi)
 
 ## Development
 

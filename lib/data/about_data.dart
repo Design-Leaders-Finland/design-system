@@ -12,8 +12,7 @@ class AboutData {
   static AboutData load() {
     // Placeholder for actual data loading
     return AboutData(
-      companyInfo:
-          "DesignLeaders.fi is a platform dedicated to open-source software and design leadership.",
+      companyInfo: "DesignLeaders.fi is a platform dedicated to open-source software and design leadership.",
       libraryLicenses: {
         "flutter": "MIT",
         "provider": "BSD-2-Clause",

@@ -3,9 +3,6 @@
 /// The web implementation uses `package:web` (localStorage), which is only
 /// available on web platforms. The stub implementation is used everywhere else
 /// (for example, in widget tests on the VM).
-///
-/// The implementation is selected at compile time via conditional imports,
-/// mirroring the `onepage` app's store.
 library;
 
 import 'theme_mode_store_stub.dart'

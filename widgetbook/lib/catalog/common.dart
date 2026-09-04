@@ -125,8 +125,7 @@ IconData iconKnob(
 ///
 /// Interactive Material widgets (checkboxes, sliders, radios, navigation bars,
 /// …) need somewhere to keep their state. Declaring that state inside a
-/// `StatefulBuilder` closure resets it on every rebuild (the same trap the
-/// `onepage` gallery documents), so each demo holds its value in this real
+/// `StatefulBuilder` closure resets it on every rebuild, so each demo holds its value in this real
 /// [StatefulWidget] instead.
 class DemoState<T> extends StatefulWidget {
   const DemoState({super.key, required this.initial, required this.builder});
