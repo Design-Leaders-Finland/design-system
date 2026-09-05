@@ -99,6 +99,7 @@ class _Hero extends StatelessWidget {
               child: Text(
                 'Design Leaders Finland Oy',
                 style: TextStyle(
+                  decoration: TextDecoration.none,
                   color: colors.text,
                   fontWeight: AppFontWeight.semiBold,
                   fontSize: FontSize.md,
@@ -113,6 +114,7 @@ class _Hero extends StatelessWidget {
           style: TextStyle(
             color: colors.text,
             fontWeight: AppFontWeight.semiBold,
+            decoration: TextDecoration.none,
             fontSize: FontSize.xl4,
             height: 1.08,
           ),
@@ -127,6 +129,7 @@ class _Hero extends StatelessWidget {
             style: TextStyle(
               color: colors.textAlternate,
               fontSize: FontSize.md,
+              decoration: TextDecoration.none,
               height: 1.4,
             ),
           ),
@@ -154,6 +157,7 @@ class _SectionHeading extends StatelessWidget {
             color: colors.text,
             fontWeight: AppFontWeight.semiBold,
             fontSize: FontSize.lg,
+            decoration: TextDecoration.none,
           ),
         ),
         SizedBox(height: Spacing.s1),
@@ -164,6 +168,7 @@ class _SectionHeading extends StatelessWidget {
             style: TextStyle(
               color: colors.textTertiary,
               fontSize: FontSize.sm,
+              decoration: TextDecoration.none,
               height: 1.4,
             ),
           ),
@@ -244,6 +249,7 @@ class _TechRow extends StatelessWidget {
               style: TextStyle(
                 color: colors.textTertiary,
                 fontWeight: AppFontWeight.semiBold,
+                decoration: TextDecoration.none,
                 fontSize: FontSize.sm,
               ),
             ),
@@ -255,6 +261,7 @@ class _TechRow extends StatelessWidget {
               style: TextStyle(
                 color: colors.text,
                 fontSize: FontSize.sm,
+                decoration: TextDecoration.none,
                 height: 1.35,
               ),
             ),

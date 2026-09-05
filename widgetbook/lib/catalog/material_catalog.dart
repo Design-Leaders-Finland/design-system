@@ -16,11 +16,11 @@ import 'progress.dart';
 // that lay a screen out, things that pop over, things that report progress, and
 // finally the design system's own primitives.
 final List<WidgetbookNode> materialDirectories = [
-  actionsCategory,
-  inputsCategory,
-  displayCategory,
-  layoutCategory,
-  feedbackCategory,
-  progressCategory,
   designSystemCategory,
+  actionsCategory,
+  displayCategory,
+  feedbackCategory,
+  inputsCategory,
+  layoutCategory,
+  progressCategory,
 ];

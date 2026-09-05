@@ -2,6 +2,8 @@ import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 
+import 'dart:math' show pow;
+
 import 'common.dart';
 
 // ── Design system ────────────────────────────────────────────────────────────
@@ -12,6 +14,60 @@ import 'common.dart';
 enum _AppTextVariant { display, heading, title, label, body, rich }
 
 enum _ColorGroup { brand, semantic, neutral, dark }
+
+// ── Color accessibility info ─────────────────────────────────────────────────
+// WCAG AAA contrast ratios (4.5:1 for normal text, 3:1 for large text)
+typedef _ContrastInfo = ({
+  String name,
+  double ratio,
+  bool passNormalText,
+  bool passLargeText,
+});
+
+/// Calculate relative luminance for WCAG contrast ratio
+double _getLuminance(Color color) {
+  final rgb =
+      [
+        (color.r * 255.0).round().clamp(0, 255),
+        (color.g * 255.0).round().clamp(0, 255),
+        (color.b * 255.0).round().clamp(0, 255),
+      ].map((c) {
+        final value = c / 255.0;
+        return value <= 0.03928
+            ? value / 12.92
+            : pow((value + 0.055) / 1.055, 2).toDouble();
+      }).toList();
+  return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+}
+
+/// Calculate WCAG contrast ratio between two colors
+double _getContrastRatio(Color color1, Color color2) {
+  final l1 = _getLuminance(color1);
+  final l2 = _getLuminance(color2);
+  final lighter = [l1, l2].reduce((a, b) => a > b ? a : b);
+  final darker = [l1, l2].reduce((a, b) => a < b ? a : b);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/// Get contrast info for a color against light and dark backgrounds
+List<_ContrastInfo> _getContrastInfo(Color foreground) {
+  final contrastLight = _getContrastRatio(foreground, AppColors.white);
+  final contrastDark = _getContrastRatio(foreground, AppColors.black);
+  return [
+    (
+      name: 'Light Background (White)',
+      ratio: contrastLight,
+      passNormalText: contrastLight >= 4.5,
+      passLargeText: contrastLight >= 3.0,
+    ),
+    (
+      name: 'Dark Background (Black)',
+      ratio: contrastDark,
+      passNormalText: contrastDark >= 4.5,
+      passLargeText: contrastDark >= 3.0,
+    ),
+  ];
+}
 
 /// Font weights offered by the [AppText] demo, keyed by a readable name.
 const Map<String, FontWeight> _fontWeights = {
@@ -383,31 +439,519 @@ WidgetbookCategory get designSystemCategory => category('Design System', [
       initial: _ColorGroup.brand,
     );
     final swatches = _colorGroups[group]!;
-    return Wrap(
-      spacing: Spacing.s3,
-      runSpacing: Spacing.s3,
-      children: [
-        for (final (name, color) in swatches)
-          SizedBox(
-            width: 104,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(AppBorderRadius.sm),
-                    border: Border.all(color: Colors.black.withAlpha(20)),
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final secondaryTextColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : Colors.grey[600]!;
+    final mutedTextColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : Colors.grey[700]!;
+    final legendBgColor = isDark
+        ? colorScheme.surface
+        : Color.fromARGB(255, 245, 245, 245);
+    final borderColor = isDark
+        ? colorScheme.outline
+        : Colors.black.withAlpha(20);
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Color swatches with usage and accessibility info
+          Wrap(
+            spacing: Spacing.s4,
+            runSpacing: Spacing.s4,
+            children: [
+              for (final (name, color) in swatches)
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 280),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Color swatch
+                      Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(
+                            AppBorderRadius.sm,
+                          ),
+                          border: Border.all(color: borderColor),
+                        ),
+                      ),
+                      const SizedBox(height: Spacing.s2),
+
+                      // Color name
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.labelLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: Spacing.s1),
+
+                      // Color value (hex)
+                      Text(
+                        '#${color.toARGB32().toRadixString(16).toUpperCase().padLeft(8, '0').substring(2)}',
+                        style: Theme.of(context).textTheme.labelSmall
+                            ?.copyWith(color: secondaryTextColor),
+                      ),
+                      const SizedBox(height: Spacing.s2),
+
+                      // Usage info
+                      if (group == _ColorGroup.brand)
+                        Text(
+                          'Use for: ',
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: mutedTextColor,
+                              ),
+                        ),
+                      if (group == _ColorGroup.brand && name == 'primary')
+                        Text(
+                          'Primary actions, main CTAs, active states',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.brand &&
+                          name == 'secondary')
+                        Text(
+                          'Secondary actions, alternate CTAs',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.brand && name == 'accent')
+                        Text(
+                          'Highlights, success states, accent elements',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.brand &&
+                          name == 'complementary')
+                        Text(
+                          'Complementary accents, borders',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+
+                      if (group == _ColorGroup.semantic)
+                        Text(
+                          'Use for: ',
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: mutedTextColor,
+                              ),
+                        ),
+                      if (group == _ColorGroup.semantic && name == 'attention')
+                        Text(
+                          'Information alerts, notices',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.semantic &&
+                          name == 'warning')
+                        Text(
+                          'Warning alerts, caution messages',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.semantic &&
+                          name == 'danger')
+                        Text(
+                          'Error states, destructive actions',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      else if (group == _ColorGroup.semantic &&
+                          name == 'success')
+                        Text(
+                          'Success messages, confirmations',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+
+                      const SizedBox(height: Spacing.s2),
+
+                      // WCAG AAA accessibility info
+                      Text(
+                        'WCAG AAA Contrast',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: mutedTextColor,
+                        ),
+                      ),
+                      const SizedBox(height: Spacing.s1),
+                      ..._getContrastInfo(color).map(
+                        (info) => Padding(
+                          padding: const EdgeInsets.only(bottom: Spacing.s1),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      info.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall,
+                                    ),
+                                    Text(
+                                      'Ratio: ${info.ratio.toStringAsFixed(2)}:1',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(
+                                            color: secondaryTextColor,
+                                            fontSize: 10,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Chip(
+                                    label: Text(
+                                      info.passNormalText
+                                          ? '✓ Normal'
+                                          : '✗ Normal',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: info.passNormalText
+                                        ? Colors.green
+                                        : Colors.red,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Spacing.s1,
+                                      vertical: 2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Chip(
+                                    label: Text(
+                                      info.passLargeText
+                                          ? '✓ Large'
+                                          : '✗ Large',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: info.passLargeText
+                                        ? Colors.green
+                                        : Colors.orange,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Spacing.s1,
+                                      vertical: 2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+            ],
+          ),
+          const SizedBox(height: Spacing.s6),
+
+          // Accessibility legend
+          Container(
+            padding: const EdgeInsets.all(Spacing.s3),
+            decoration: BoxDecoration(
+              color: legendBgColor,
+              borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+              border: Border.all(color: borderColor),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'WCAG AAA Accessibility Guidelines',
+                  style: Theme.of(context).textTheme.labelLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: Spacing.s2),
+                Text(
+                  '• ✓ Normal: Contrast ratio ≥ 4.5:1 (AA for regular text)',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
                 const SizedBox(height: Spacing.s1),
-                Text(name, style: Theme.of(context).textTheme.labelSmall),
+                Text(
+                  '• ✓ Large: Contrast ratio ≥ 3.0:1 (AA for large text, 18pt+)',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+                const SizedBox(height: Spacing.s1),
+                Text(
+                  '• AAA requires 7:1 for normal text & 4.5:1 for large text',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: secondaryTextColor,
+                  ),
+                ),
               ],
             ),
           ),
-      ],
+        ],
+      ),
+    );
+  }),
+  component('Typography', (context) {
+    final k = context.knobs;
+    final showSizes = k.boolean(label: 'Show px sizes', initialValue: true);
+    final useColors = k.boolean(label: 'Use theme colors', initialValue: true);
+
+    final textColor = useColors
+        ? Theme.of(context).colorScheme.onSurface
+        : (Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black);
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final containerBgColor = isDark
+        ? colorScheme.surface
+        : colorScheme.surfaceContainerLowest;
+    final borderColor = isDark ? colorScheme.outline : Colors.grey[300]!;
+    final hintColor = isDark ? colorScheme.onSurfaceVariant : Colors.grey[600]!;
+    final mutedColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : Colors.grey[700]!;
+
+    const typographyItems =
+        <({String label, String category, TextStyle style, String usage})>[
+          // Display styles
+          (
+            label: 'Display Large',
+            category: 'Display',
+            style: AppTypography.displayLg,
+            usage: 'Hero/splash screen headlines',
+          ),
+          (
+            label: 'Display Medium',
+            category: 'Display',
+            style: AppTypography.displayMd,
+            usage: 'Page main headings',
+          ),
+          (
+            label: 'Display Small',
+            category: 'Display',
+            style: AppTypography.displaySm,
+            usage: 'Section headlines',
+          ),
+
+          // Heading styles
+          (
+            label: 'Heading Large',
+            category: 'Heading',
+            style: AppTypography.headlineLg,
+            usage: 'Subsection titles',
+          ),
+          (
+            label: 'Heading Medium',
+            category: 'Heading',
+            style: AppTypography.headlineMd,
+            usage: 'Card titles, modal headers',
+          ),
+          (
+            label: 'Heading Small',
+            category: 'Heading',
+            style: AppTypography.headlineSm,
+            usage: 'List item headers',
+          ),
+
+          // Title styles
+          (
+            label: 'Title Large',
+            category: 'Title',
+            style: AppTypography.titleLg,
+            usage: 'Dialog titles, form sections',
+          ),
+          (
+            label: 'Title Medium',
+            category: 'Title',
+            style: AppTypography.titleMd,
+            usage: 'Form labels, emphasized text',
+          ),
+          (
+            label: 'Title Small',
+            category: 'Title',
+            style: AppTypography.titleSm,
+            usage: 'Component labels, metadata',
+          ),
+
+          // Body styles
+          (
+            label: 'Body Large',
+            category: 'Body',
+            style: AppTypography.bodyLg,
+            usage: 'Main body text, descriptions',
+          ),
+          (
+            label: 'Body Medium',
+            category: 'Body',
+            style: AppTypography.bodyMd,
+            usage: 'Secondary text, helper text',
+          ),
+          (
+            label: 'Body Small',
+            category: 'Body',
+            style: AppTypography.bodySm,
+            usage: 'Captions, small text',
+          ),
+
+          // Label styles
+          (
+            label: 'Label Large',
+            category: 'Label',
+            style: AppTypography.labelLg,
+            usage: 'Button text, tags',
+          ),
+          (
+            label: 'Label Medium',
+            category: 'Label',
+            style: AppTypography.labelMd,
+            usage: 'Small labels, badges',
+          ),
+          (
+            label: 'Label Small',
+            category: 'Label',
+            style: AppTypography.labelSm,
+            usage: 'Smallest labels, hints',
+          ),
+        ];
+
+    final groupedByCategory =
+        <
+          String,
+          List<({String label, String category, TextStyle style, String usage})>
+        >{};
+
+    for (final item in typographyItems) {
+      (groupedByCategory[item.category] ??= []).add(item);
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final category in groupedByCategory.keys)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Spacing.s6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    category,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.s3),
+                  for (final item in groupedByCategory[category]!)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: Spacing.s4),
+                      child: Container(
+                        padding: const EdgeInsets.all(Spacing.s3),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: borderColor),
+                          borderRadius: BorderRadius.circular(
+                            AppBorderRadius.sm,
+                          ),
+                          color: containerBgColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Label and metadata
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.label,
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                ),
+                                if (showSizes)
+                                  Text(
+                                    '${(item.style.fontSize ?? 16).toStringAsFixed(1)}px',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(color: hintColor),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: Spacing.s2),
+
+                            // Usage description
+                            Text(
+                              'Usage: ${item.usage}',
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: mutedColor,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                            ),
+                            const SizedBox(height: Spacing.s2),
+
+                            // Divider
+                            Container(height: 1, color: borderColor),
+                            const SizedBox(height: Spacing.s2),
+
+                            // Example text
+                            Text(
+                              'The quick brown fox jumps over the lazy dog',
+                              style: item.style.copyWith(color: textColor),
+                            ),
+                            const SizedBox(height: Spacing.s2),
+
+                            // Typography details
+                            Wrap(
+                              spacing: Spacing.s3,
+                              runSpacing: Spacing.s1,
+                              children: [
+                                Text(
+                                  'Weight: ${item.style.fontWeight?.toString().split('.').last ?? 'regular'}',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(color: hintColor),
+                                ),
+                                Text(
+                                  'Height: ${item.style.height?.toStringAsFixed(2) ?? '1.0'}',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(color: hintColor),
+                                ),
+                                if (item.style.letterSpacing != null)
+                                  Text(
+                                    'Letter spacing: ${item.style.letterSpacing?.toStringAsFixed(2)}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(color: hintColor),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }),
 ]);
