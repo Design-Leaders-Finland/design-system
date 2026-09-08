@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../../utils/utils.dart' show PlatformHelper;
 
 /// Base unit for spacing and sizing, following a 4px scale.
-const double baseUnit = 4.0;
+const double baseUnit = 4.25;
 
 /// Spacing density tokens to adjust the overall spacing scale of the app.
 const compactDensityScale = 0.875;
