@@ -92,4 +92,111 @@ void main() {
     expect(Sizing.sizeMd, equals(64));
     expect(Sizing.sizeXl, equals(128));
   });
+
+  // ── Text-scale (accessibility) responsiveness ──────────────────────────────
+  // Mirrors Widgetbook's `TextScaleAddon`, which wraps every use case in a
+  // `MediaQuery` with a linear `TextScaler`. At 200% the text is twice as
+  // large, so constrained components must wrap/ellipsize instead of overflowing
+  // each other (a RenderFlex overflow becomes a test exception).
+
+  Widget atTextScale(Widget child) => MediaQuery(
+    data: MediaQueryData(textScaler: TextScaler.linear(2.0)),
+    child: child,
+  );
+
+  testWidgets(
+    'buttons wrap long labels under 2.0× text scale instead of overflowing',
+    (tester) async {
+      final buttons = <Widget Function()>[
+        () => SolidButton(
+          onPressed: () {},
+          leftIcon: const Icon(Icons.check),
+          rightIcon: const Icon(Icons.arrow_forward),
+          child: const Text(
+            'SolidButton with a very long label that must wrap',
+          ),
+        ),
+        () => AppOutlinedButton(
+          onPressed: () {},
+          leftIcon: const Icon(Icons.check),
+          rightIcon: const Icon(Icons.arrow_forward),
+          child: const Text(
+            'AppOutlinedButton with a very long label that must wrap',
+          ),
+        ),
+        () => GhostButton(
+          onPressed: () {},
+          leftIcon: const Icon(Icons.check),
+          rightIcon: const Icon(Icons.arrow_forward),
+          child: const Text(
+            'GhostButton with a very long label that must wrap',
+          ),
+        ),
+      ];
+
+      for (final build in buttons) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.lightTheme,
+            home: Scaffold(
+              body: atTextScale(SizedBox(width: 200, child: build())),
+            ),
+          ),
+        );
+        await tester.pump();
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'button overflowed at 2x',
+        );
+      }
+    },
+  );
+
+  testWidgets('AppText wraps inside a constrained box at high text scale', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: Scaffold(
+          body: atTextScale(
+            const SizedBox(
+              width: 160,
+              child: AppText.body('Design Leaders Finland design system'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('AppText ellipsizes at high text scale when maxLines is set', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: Scaffold(
+          body: atTextScale(
+            SizedBox(
+              width: 120,
+              child: AppText.title(
+                'A very long title that should ellipsize gracefully',
+                maxLines: 2,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+
+    final text = tester.widget<Text>(find.byType(Text));
+    expect(text.maxLines, 2);
+    expect(text.overflow, TextOverflow.ellipsis);
+  });
 }

@@ -63,11 +63,17 @@ abstract class BaseButton extends StatelessWidget {
 
     final Widget? leftAddOn = isLoading ? loadingIndicator : leftIcon;
 
+    // The label sits in a `Flexible` (FlexFit.loose), so a button that is
+    // width-constrained (a narrow column, a small breakpoint, or the text
+    // grown by the accessibility text-scale addon past the button's slot)
+    // lets its label wrap instead of shoving the icons out of the button and
+    // overflowing the row. When the button has no width limit the `Flexible`
+    // is a no-op, and the button keeps growing with its content as before.
     final content = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (hasLeftAddOn) ...[leftAddOn!, const SizedBox(width: Spacing.s3_5)],
-        child,
+        Flexible(fit: FlexFit.loose, child: child),
         if (rightIcon != null) ...[
           const SizedBox(width: Spacing.s3_5),
           rightIcon!,

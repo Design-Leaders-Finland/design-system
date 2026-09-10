@@ -2,6 +2,7 @@ import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 
+import 'dart:math' as math;
 import 'dart:math' show pow;
 
 import 'common.dart';
@@ -431,7 +432,7 @@ WidgetbookCategory get designSystemCategory => category('Design System', [
       ],
     );
   }),
-  component('Colors', (context) {
+  component('Colors1', (context) {
     final group = optionKnob<_ColorGroup>(
       context,
       label: 'Palette',
@@ -702,6 +703,23 @@ WidgetbookCategory get designSystemCategory => category('Design System', [
       ),
     );
   }),
+  component('Colors2', (context) {
+    final group = optionKnob<_ColorGroup>(
+      context,
+      label: 'Palette',
+      options: _ColorGroup.values,
+      initial: _ColorGroup.brand,
+    );
+    final swatches = _colorGroups[group]!;
+    return Wrap(
+      spacing: Spacing.s4,
+      runSpacing: Spacing.s4,
+      children: [
+        for (final (name, color) in swatches)
+          _ColorCard(name: name, color: color),
+      ],
+    );
+  }),
   component('Typography', (context) {
     final k = context.knobs;
     final showSizes = k.boolean(label: 'Show px sizes', initialValue: true);
@@ -874,15 +892,24 @@ WidgetbookCategory get designSystemCategory => category('Design System', [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  item.label,
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
+                                // Flexible so the label wraps/ellipsizes instead
+                                // of overflowing the card when the text-scale
+                                // addon enlarges it past the card width.
+                                Flexible(
+                                  child: Text(
+                                    item.label,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                  ),
                                 ),
                                 if (showSizes)
                                   Text(
@@ -955,3 +982,236 @@ WidgetbookCategory get designSystemCategory => category('Design System', [
     );
   }),
 ]);
+
+// ── Colors helpers ──────────────────────────────────────────────────────────
+
+/// The WCAG 2.x contrast ratio between two colors, `(L1 + 0.05) / (L2 + 0.05)`
+/// where `L1` is the lighter of the two relative luminances. See
+/// <https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio>.
+double _contrastRatio(Color a, Color b) {
+  final la = a.computeLuminance();
+  final lb = b.computeLuminance();
+  final lighter = math.max(la, lb);
+  final darker = math.min(la, lb);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/// White or black, whichever has the higher contrast against [background].
+Color _bestForeground(Color background) =>
+    _contrastRatio(background, AppColors.white) >=
+        _contrastRatio(background, AppColors.black)
+    ? AppColors.white
+    : AppColors.black;
+
+/// Formats a contrast ratio with two decimals, e.g. `7.05 : 1`.
+String _ratioLabel(double ratio) => '${ratio.toStringAsFixed(2)} : 1';
+
+/// The `#RRGGBB` notation of an opaque [color].
+String _hexLabel(Color color) =>
+    '#${(color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+
+/// One palette color demonstrated as a background and as foreground text.
+///
+/// The WCAG contrast ratio is rendered as text inside each example rect, and
+/// the possible usages (normal text, large text, UI components) are listed
+/// below with a pass/fail verdict for the best achievable pairing.
+class _ColorCard extends StatelessWidget {
+  const _ColorCard({required this.name, required this.color});
+
+  final String name;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final onWhite = _contrastRatio(color, AppColors.white);
+    final onBlack = _contrastRatio(color, AppColors.black);
+    final best = math.max(onWhite, onBlack).toDouble();
+
+    Widget caption(String text) => Text(
+      text,
+      style: TextStyle(
+        color: colors.textTertiary,
+        fontSize: FontSize.xs,
+        fontWeight: AppFontWeight.semiBold,
+      ),
+    );
+
+    // The color as a background; the ratio (against whichever of white/black
+    // reads better) is the text rendered in the rect.
+    final background = Container(
+      // A soft minimum: the swatch must stay tall enough to read the ratio,
+      // but it grows (instead of clipping) when the text-scale addon enlarges
+      // the sample glyphs and ratio label.
+      constraints: BoxConstraints(minHeight: Spacing.s14),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+        border: Border.all(color: AppColors.black.withAlpha(20)),
+      ),
+      padding: EdgeInsets.all(Spacing.s2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Aa',
+            style: TextStyle(
+              color: _bestForeground(color),
+              fontSize: FontSize.base,
+              fontWeight: AppFontWeight.bold,
+            ),
+          ),
+          Text(
+            _ratioLabel(best),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _bestForeground(color),
+              fontSize: FontSize.sm,
+              fontWeight: AppFontWeight.semiBold,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // The color as foreground text on a white and on a black surface. The
+    // sample glyph uses the color itself; the ratio text uses a readable ink.
+    Widget foreground(Color surface) {
+      final ratio = _contrastRatio(color, surface);
+      final ink = _bestForeground(surface);
+      return Expanded(
+        child: Container(
+          constraints: BoxConstraints(minHeight: Spacing.s10),
+          decoration: BoxDecoration(
+            color: surface,
+            borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+            border: Border.all(color: AppColors.black.withAlpha(20)),
+          ),
+          padding: EdgeInsets.all(Spacing.s1),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Aa',
+                style: TextStyle(
+                  color: color,
+                  fontSize: FontSize.sm,
+                  fontWeight: AppFontWeight.bold,
+                ),
+              ),
+              Text(
+                _ratioLabel(ratio),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: ink, fontSize: FontSize.xs),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // A list item under "Usage": the usage label, the WCAG requirement and a
+    // check/close verdict based on the best achievable pairing.
+    Widget usage(String label, String required, double threshold) {
+      final passes = best >= threshold;
+      final status = passes ? AppColors.success : AppColors.danger;
+      return Row(
+        children: [
+          Icon(
+            passes ? Icons.check : Icons.close,
+            color: status,
+            size: Sizing.iconSm,
+          ),
+          SizedBox(width: Spacing.s0_5),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: status,
+                fontSize: FontSize.xs,
+                fontWeight: AppFontWeight.semiBold,
+              ),
+            ),
+          ),
+          SizedBox(width: Spacing.s0_5),
+          Text(
+            required,
+            style: TextStyle(color: colors.textTertiary, fontSize: FontSize.xs),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox(
+      width: Sizing.scale(56),
+      child: Container(
+        padding: EdgeInsets.all(Spacing.s3),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+          border: Border.all(color: colors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Flexible so a long color name at a high text scale wraps
+                // instead of pushing the hex code out of the card.
+                Flexible(
+                  child: Text(
+                    name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.text,
+                      fontSize: FontSize.sm,
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: Spacing.s0_5),
+                Text(
+                  _hexLabel(color),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: colors.textTertiary,
+                    fontSize: FontSize.xs,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: Spacing.s2),
+            caption('Background'),
+            SizedBox(height: Spacing.s0_5),
+            background,
+            SizedBox(height: Spacing.s2),
+            caption('Foreground'),
+            SizedBox(height: Spacing.s0_5),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                foreground(AppColors.white),
+                SizedBox(width: Spacing.s1),
+                foreground(AppColors.black),
+              ],
+            ),
+            SizedBox(height: Spacing.s2),
+            caption('Usage · WCAG 1.4.3 / 1.4.11'),
+            SizedBox(height: Spacing.s0_5),
+            usage('Normal text', '4.5 : 1', 4.5),
+            SizedBox(height: Spacing.s0_5),
+            usage('Large text', '3 : 1', 3),
+            SizedBox(height: Spacing.s0_5),
+            usage('UI components', '3 : 1', 3),
+          ],
+        ),
+      ),
+    );
+  }
+}

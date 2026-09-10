@@ -6,7 +6,6 @@
 // the network `Image`) are never invoked. The home test pumps `DesignSystemHome`
 // to confirm the landing page builds and shows the company + tech info.
 
-import 'package:design_leaders_system/design_leaders_system.dart';
 import 'package:design_widgetbook/catalog/material_catalog.dart';
 import 'package:design_widgetbook/gallery_header.dart';
 import 'package:design_widgetbook/home.dart';
@@ -33,13 +32,13 @@ void main() {
     test('exposes one category per Material widget group', () {
       expect(materialDirectories, hasLength(7));
       expect(materialDirectories.map((c) => c.name).toList(), [
-        'Actions',
-        'Selection & Input',
-        'Display & Data',
-        'Layout & Navigation',
-        'Feedback & Overlays',
-        'Progress',
         'Design System',
+        'Actions',
+        'Display & Data',
+        'Feedback & Overlays',
+        'Selection & Input',
+        'Layout & Navigation',
+        'Progress',
       ]);
     });
 
@@ -91,8 +90,25 @@ void main() {
       expect(find.text('Design Leaders Finland Oy'), findsOneWidget);
       expect(find.textContaining('Reduce design debt'), findsOneWidget);
       expect(find.textContaining('Widgetbook v3'), findsOneWidget);
-      expect(find.text('designleaders.fi'), findsOneWidget);
-      expect(find.byType(SolidButton), findsWidgets);
+      expect(find.textContaining('design engineering'), findsOneWidget);
+      expect(find.textContaining('AppText · SolidButton'), findsOneWidget);
+    });
+
+    testWidgets('hero stays intact at 2.0× text scale', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.linear(2.0)),
+            child: const DesignSystemHome(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // The hero title and tech table must wrap inside the layout instead of
+      // overflowing each other when the text scale is doubled.
+      expect(tester.takeException(), isNull);
+      expect(find.text('Design Leaders Finland Oy'), findsOneWidget);
     });
   });
 
@@ -102,6 +118,21 @@ void main() {
       await tester.pump();
 
       expect(find.byIcon(Icons.design_services), findsOneWidget);
+      expect(find.text('Design Leaders'), findsOneWidget);
+    });
+
+    testWidgets('stays intact at 2.0× text scale', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.linear(2.0)),
+            child: const GalleryHeader(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
       expect(find.text('Design Leaders'), findsOneWidget);
     });
   });
