@@ -1,0 +1,22 @@
+name: assets
+description: >
+  Holds the assets for the app. The assets are included in a
+  separate package, to be able to share it with Widgetbook app.
+
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+  flutter: ">=3.47.2"
+
+flutter:
+  assets:
+    - ./
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package

@@ -32,6 +32,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Own image assets
+  assets:
+    path: ../assets
+
   # Bundles the Cupertino Icons font. A transitive Widgetbook dependency
   # (device frame / accessibility tooling) references `CupertinoIcons`; without
   # this the web build warns about a missing font package.
