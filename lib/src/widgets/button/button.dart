@@ -7,6 +7,7 @@ enum ButtonColorSheme { primary, secondary }
 abstract class BaseButton extends StatelessWidget {
   final Widget? rightIcon;
   final Widget? leftIcon;
+  final String? semanticLabel;
   final VoidCallback? onPressed;
   final AppBorderRadius? borderRadius;
   final ButtonStyle? style;
@@ -19,6 +20,7 @@ abstract class BaseButton extends StatelessWidget {
     this.onPressed,
     this.leftIcon,
     this.rightIcon,
+    this.semanticLabel,
     required this.child,
     this.borderRadius,
     this.style,
@@ -81,12 +83,21 @@ abstract class BaseButton extends StatelessWidget {
       ],
     );
 
-    return buildButton(
+    final button = buildButton(
       context: context,
       style: style,
       content: content,
       theme: theme,
     );
+
+    return semanticLabel == null
+        ? button
+        : Semantics(
+            label: semanticLabel,
+            button: true,
+            enabled: !isLoading && onPressed != null,
+            child: button,
+          );
   }
 }
 
@@ -96,6 +107,7 @@ class SolidButton extends BaseButton {
     super.onPressed,
     super.leftIcon,
     super.rightIcon,
+    super.semanticLabel,
     required super.child,
     super.borderRadius,
     super.style,
@@ -119,7 +131,7 @@ class SolidButton extends BaseButton {
     required ThemeData theme,
   }) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? null : onPressed,
       style: resolveStyle(theme, style),
       child: content,
     );
@@ -132,6 +144,7 @@ class AppOutlinedButton extends BaseButton {
     super.onPressed,
     super.leftIcon,
     super.rightIcon,
+    super.semanticLabel,
     required super.child,
     super.borderRadius,
     super.style,
@@ -153,7 +166,7 @@ class AppOutlinedButton extends BaseButton {
     required ThemeData theme,
   }) {
     return OutlinedButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? null : onPressed,
       style: resolveStyle(theme, style),
       child: content,
     );
@@ -166,6 +179,7 @@ class GhostButton extends BaseButton {
     super.onPressed,
     super.leftIcon,
     super.rightIcon,
+    super.semanticLabel,
     required super.child,
     super.borderRadius,
     super.style,
@@ -189,7 +203,7 @@ class GhostButton extends BaseButton {
     required ThemeData theme,
   }) {
     return TextButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? null : onPressed,
       style: resolveStyle(theme, style),
       child: content,
     );

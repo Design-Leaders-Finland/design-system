@@ -35,7 +35,7 @@ class AppText extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.style = AppTypography.titleMd,
-    this.color = AppColors.primary,
+    this.color,
     this.textAlign = TextAlign.start,
     this.overflow = TextOverflow.ellipsis,
   });

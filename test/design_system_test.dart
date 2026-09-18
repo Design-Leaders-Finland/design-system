@@ -36,6 +36,83 @@ void main() {
     expect(textWidget.style?.color, equals(AppColors.darkText));
   });
 
+  testWidgets('AppText.title follows the active theme by default', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.darkTheme,
+        home: Scaffold(body: AppText.title('Dark title')),
+      ),
+    );
+
+    final textWidget = tester.widget<Text>(find.byType(Text));
+    expect(textWidget.style?.color, equals(AppColors.darkText));
+  });
+
+  testWidgets('button semantic labels are exposed to assistive technology', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: Scaffold(
+          body: SolidButton(
+            semanticLabel: 'Save profile',
+            onPressed: () {},
+            child: const Icon(Icons.save),
+          ),
+        ),
+      ),
+    );
+
+    final button = tester.getSemantics(find.byType(SolidButton));
+    expect(
+      button,
+      matchesSemantics(
+        label: 'Save profile',
+        isButton: true,
+        hasEnabledState: true,
+        isEnabled: true,
+      ),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('loading buttons are disabled and keep a minimum tap target', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: Scaffold(
+          body: SolidButton(
+            isLoading: true,
+            onPressed: () {},
+            child: const Text('Saving'),
+          ),
+        ),
+      ),
+    );
+
+    final button = find.byType(ElevatedButton);
+    final renderBox = tester.renderObject<RenderBox>(button);
+    expect(renderBox.size.width, greaterThanOrEqualTo(48));
+    expect(renderBox.size.height, greaterThanOrEqualTo(48));
+    expect(
+      tester.getSemantics(button),
+      matchesSemantics(
+        label: 'Saving',
+        isButton: true,
+        hasEnabledState: true,
+        isEnabled: false,
+      ),
+    );
+    semantics.dispose();
+  });
+
   test('headline styles use Figtree and body/label use Asap Condensed', () {
     expect(AppTypography.headlineMd.fontFamily, equals(FontFamily.figTree));
     expect(AppTypography.bodyMd.fontFamily, equals(FontFamily.asapCondensed));
